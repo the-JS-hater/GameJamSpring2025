@@ -1,6 +1,7 @@
 #include <raylib.h>
 #include "../inc/ecs.hpp"
 #include "../inc/sparseSet.hpp"
+#include "../inc/quadtree.hpp"
 
 
 void genTestEntities(ECS& ecs, size_t count) 
@@ -44,20 +45,36 @@ void genTestEntities(ECS& ecs, size_t count)
 int main()
 {
 	SetTraceLogLevel(LOG_WARNING);
-	InitWindow(600, 600, "Game");
+  InitWindow(1280, 720, "Game");
 	
 	ECS ecs; 
-	genTestEntities(ecs, 1000);
+	genTestEntities(ecs, 100);
 
+  Rectangle worldBounds = {
+    0, 
+    0, 
+    static_cast<float>(GetScreenWidth()), 
+    static_cast<float>(GetScreenHeight())
+  };
+  Quadtree quadtree(worldBounds);
+
+	SetTargetFPS(60);
 	while (!WindowShouldClose())
 	{
-		BeginDrawing();
 
-		ClearBackground(BLACK);
-		
-		ecs.renderEntities();
+		/* UPDATE */
 
-		EndDrawing();
+  	ecs.updateMovement();
+  	quadtree.update(ecs);
+  	auto vec = quadtree.getAllCollisions(ecs);
+		ecs.resolveCollisions(vec);
+  	  
+		/* RENDERING */
+  	
+  	BeginDrawing();
+  	ClearBackground(WHITE);
+  	
+  	ecs.renderEntities();
 	}
 
 	CloseWindow();
