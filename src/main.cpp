@@ -11,7 +11,7 @@ int main()
 	ECS ecs; 
 	Player player = init_player(ecs);
 
-	//genTestEntities(ecs, 1);
+	genTestEntities(ecs, 100);
 
   Rectangle worldBounds = {
     0, 0, 
@@ -24,11 +24,11 @@ int main()
 	while (!WindowShouldClose())
 	{
 		/* UPDATE */
-  	ecs.updateMovement();
     player.input(ecs);
-		// 	quadtree.update(ecs);
-		// 	auto vec = quadtree.getAllCollisions(ecs);
-		// ecs.resolveCollisions(vec);
+  	ecs.updateMovement();
+  	quadtree.update(ecs);
+  	auto vec = quadtree.getAllCollisions(ecs);
+		ecs.resolveCollisions(vec);
   	  
 		/* RENDERING */
   	
