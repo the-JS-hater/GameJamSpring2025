@@ -61,7 +61,6 @@ int main()
 	SetTargetFPS(60);
 	while (!WindowShouldClose())
 	{
-
 		/* UPDATE */
 
   	ecs.updateMovement();
@@ -75,6 +74,8 @@ int main()
   	ClearBackground(WHITE);
   	
   	ecs.renderEntities();
+
+		EndDrawing();
 	}
 
 	CloseWindow();
