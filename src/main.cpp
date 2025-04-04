@@ -2,14 +2,23 @@
 #include "../inc/ecs.hpp"
 #include "../inc/quadtree.hpp"
 #include "../inc/player.hpp"
+#include "../inc/utils.hpp"
+#include "../inc/hex.hpp"
+#include <stdio.h>
+
+#define WINDOW_W 1280
+#define WINDOW_H 720 
+	
 
 int main()
 {
 	SetTraceLogLevel(LOG_WARNING);
-  InitWindow(1280, 720, "Game");
+  InitWindow(WINDOW_W, WINDOW_H, "Game");
 	
 	ECS ecs; 
 	Player player = init_player(ecs);
+		
+	ElectricHex hex(20.0f, 15.0f, 5.0f, 2.0f, 50.0f, 30.0f); 
 
 	genTestEntities(ecs, 100);
 
@@ -19,6 +28,8 @@ int main()
     static_cast<float>(GetScreenHeight())
   };
   Quadtree quadtree(worldBounds);
+	
+
 
 	SetTargetFPS(60);
 	while (!WindowShouldClose())
@@ -29,13 +40,15 @@ int main()
   	quadtree.update(ecs);
   	auto vec = quadtree.getAllCollisions(ecs);
 		ecs.resolveCollisions(vec);
-  	  
+ 		
 		/* RENDERING */
   	
   	BeginDrawing();
   	ClearBackground(WHITE);
   	
-  	ecs.renderEntities();
+  	hex.draw();
+		ecs.renderEntities();
+
 
 		EndDrawing();
 	}

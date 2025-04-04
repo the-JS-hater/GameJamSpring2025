@@ -10,11 +10,11 @@ LIBS=-lraylib
 _DEPS = 
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o sparseSet.o ecs.o quadtree.o player.o
+_OBJ = main.o sparseSet.o ecs.o quadtree.o player.o hex.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS)
-	$(CC) -c -o $@ $< $(FLAGS)
+	$(CC) -c -o $@ $< $(FLAGS) -fcompare-debug-second
 
 game.exe: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
