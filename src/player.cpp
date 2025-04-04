@@ -1,5 +1,12 @@
 #include "../inc/player.hpp"
 
+void Player::input(ECS &ecs) {
+  	if (IsKeyDown(KEY_W)) (*ecs.velocities.getComponent(this->id)).vy -= 1.0f;
+		if (IsKeyDown(KEY_A)) (*ecs.velocities.getComponent(this->id)).vx -= 1.0f;
+		if (IsKeyDown(KEY_S)) (*ecs.velocities.getComponent(this->id)).vy += 1.0f;
+		if (IsKeyDown(KEY_D)) (*ecs.velocities.getComponent(this->id)).vx += 1.0f;
+}
+
 Player init_player(ECS& ecs) {
 	Texture2D playerTex = LoadTexture("resources/sprites/Spam.png");
 	Entity playerId = ecs.createEntity();

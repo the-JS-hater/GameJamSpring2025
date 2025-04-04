@@ -1,8 +1,6 @@
 #include <raylib.h>
 #include "../inc/ecs.hpp"
-#include "../inc/sparseSet.hpp"
 #include "../inc/quadtree.hpp"
-#include "../inc/utils.hpp"
 #include "../inc/player.hpp"
 
 int main()
@@ -26,15 +24,11 @@ int main()
 	while (!WindowShouldClose())
 	{
 		/* UPDATE */
-		if (IsKeyDown(KEY_W)) (*ecs.velocities.getComponent(player.id)).vy -= 1.0f;
-		if (IsKeyDown(KEY_A)) (*ecs.velocities.getComponent(player.id)).vx -= 1.0f;
-		if (IsKeyDown(KEY_S)) (*ecs.velocities.getComponent(player.id)).vy += 1.0f;
-		if (IsKeyDown(KEY_D)) (*ecs.velocities.getComponent(player.id)).vx += 1.0f;
-
   	ecs.updateMovement();
-  	//quadtree.update(ecs);
-  	//auto vec = quadtree.getAllCollisions(ecs);
-		//ecs.resolveCollisions(vec);
+    player.input(ecs);
+		// 	quadtree.update(ecs);
+		// 	auto vec = quadtree.getAllCollisions(ecs);
+		// ecs.resolveCollisions(vec);
   	  
 		/* RENDERING */
   	
