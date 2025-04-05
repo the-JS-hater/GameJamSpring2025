@@ -22,8 +22,6 @@ int main()
 		
 	ElectricHex hex(20.0f, 15.0f, 5.0f, 2.0f, 50.0f, 30.0f); 
 
-	genTestEntities(ecs, 10);
-
   Rectangle worldBounds = {
     0, 0, 
     static_cast<float>(GetScreenWidth()), 

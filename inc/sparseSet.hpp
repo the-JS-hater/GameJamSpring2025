@@ -21,6 +21,7 @@ struct SparseSet
   void remove(Entity);
 
   T* getComponent(Entity);
+  void set_component(Entity, T&);
 	
   size_t size() const;
 };

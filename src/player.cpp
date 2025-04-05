@@ -2,20 +2,13 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
-#include <ostream>
 #include <raylib.h>
-#include <iostream>
 
 void Player::input(ECS &ecs)
 {
-  (*ecs.velocities.getComponent(this->hand_l)).vx -= (*ecs.velocities.getComponent(this->body)).vx;
-  (*ecs.velocities.getComponent(this->hand_l)).vy -= (*ecs.velocities.getComponent(this->body)).vy;
-  (*ecs.velocities.getComponent(this->hand_r)).vx -= (*ecs.velocities.getComponent(this->body)).vx;
-  (*ecs.velocities.getComponent(this->hand_r)).vy -= (*ecs.velocities.getComponent(this->body)).vy;
-
-  (*ecs.velocities.getComponent(this->body)).vy = 0.0f;
-  (*ecs.velocities.getComponent(this->body)).vx = 0.0f;
-
+  Velocity b_v {0, 0};
+  Velocity h_l_v = (*ecs.velocities.getComponent(this->hand_l));
+  Velocity h_r_v = (*ecs.velocities.getComponent(this->hand_r));
 
   if (IsKeyDown(KEY_SPACE)) switch (this->active_hand)
   {
@@ -27,33 +20,30 @@ void Player::input(ECS &ecs)
       break;
   };
 
-  if (IsKeyDown(KEY_UP)) (*ecs.velocities.getComponent(this->body)).vy = -2.0f;
-  if (IsKeyDown(KEY_LEFT)) (*ecs.velocities.getComponent(this->body)).vx = -2.0f;
-  if (IsKeyDown(KEY_DOWN)) (*ecs.velocities.getComponent(this->body)).vy = 2.0f;
-  if (IsKeyDown(KEY_RIGHT)) (*ecs.velocities.getComponent(this->body)).vx = 2.0f;
+  if (IsKeyDown(KEY_UP)) b_v.vy = -2.0f;
+  if (IsKeyDown(KEY_LEFT)) b_v.vx = -2.0f;
+  if (IsKeyDown(KEY_DOWN)) b_v.vy = 2.0f;
+  if (IsKeyDown(KEY_RIGHT)) b_v.vx = 2.0f;
 
-  (*ecs.velocities.getComponent(this->hand_l)).vx += (*ecs.velocities.getComponent(this->body)).vx;
-  (*ecs.velocities.getComponent(this->hand_l)).vy += (*ecs.velocities.getComponent(this->body)).vy;
-  (*ecs.velocities.getComponent(this->hand_r)).vx += (*ecs.velocities.getComponent(this->body)).vx;
-  (*ecs.velocities.getComponent(this->hand_r)).vy += (*ecs.velocities.getComponent(this->body)).vy;
-
-
-  
   switch (this->active_hand)
   {
     case Hand::left: 
-      if (IsKeyDown(KEY_W)) (*ecs.velocities.getComponent(this->hand_l)).vy -= 1.0f;
-      if (IsKeyDown(KEY_A)) (*ecs.velocities.getComponent(this->hand_l)).vx -= 1.0f;
-      if (IsKeyDown(KEY_S)) (*ecs.velocities.getComponent(this->hand_l)).vy += 1.0f;
-      if (IsKeyDown(KEY_D)) (*ecs.velocities.getComponent(this->hand_l)).vx += 1.0f;
+      if (IsKeyDown(KEY_W)) h_l_v.vy -= 1.0f;
+      if (IsKeyDown(KEY_A)) h_l_v.vx -= 1.0f;
+      if (IsKeyDown(KEY_S)) h_l_v.vy += 1.0f;
+      if (IsKeyDown(KEY_D)) h_l_v.vx += 1.0f;
       break;
     case Hand::right: 
-      if (IsKeyDown(KEY_W)) (*ecs.velocities.getComponent(this->hand_r)).vy -= 1.0f;
-      if (IsKeyDown(KEY_A)) (*ecs.velocities.getComponent(this->hand_r)).vx -= 1.0f;
-      if (IsKeyDown(KEY_S)) (*ecs.velocities.getComponent(this->hand_r)).vy += 1.0f;
-      if (IsKeyDown(KEY_D)) (*ecs.velocities.getComponent(this->hand_r)).vx += 1.0f;
+      if (IsKeyDown(KEY_W)) h_r_v.vy -= 1.0f;
+      if (IsKeyDown(KEY_A)) h_r_v.vx -= 1.0f;
+      if (IsKeyDown(KEY_S)) h_r_v.vy += 1.0f;
+      if (IsKeyDown(KEY_D)) h_r_v.vx += 1.0f;
       break;
   }
+
+  ecs.velocities.set_component(this->body, b_v);
+  ecs.velocities.set_component(this->hand_l, h_l_v);
+  ecs.velocities.set_component(this->hand_r, h_r_v);
 }
 
 void Player::update(ECS& ecs)

@@ -1,4 +1,7 @@
 #include "../inc/sparseSet.hpp"
+#include <cstddef>
+#include <iostream>
+#include <ostream>
 
 
 template<typename T>
@@ -50,6 +53,18 @@ T* SparseSet<T>::getComponent(Entity id)
   }
   return nullptr;
 }
+
+template<typename T>
+void SparseSet<T>::set_component(Entity id, T& val)
+{
+  auto it = entityToIndex.find(id);
+  if (it != entityToIndex.end()) 
+	{
+    this->dense[it->second] = val;
+  }
+}
+
+
 
 template<typename T>
 size_t SparseSet<T>::size() const 
