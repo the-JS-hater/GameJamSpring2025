@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <raylib.h>
+#include <string>
 
 void Player::gamepad_input(Acceleration& b, Acceleration& l, Acceleration& r) {
   const float leftStickDeadzoneX = 0.1f;
@@ -17,6 +18,7 @@ void Player::gamepad_input(Acceleration& b, Acceleration& l, Acceleration& r) {
 
   bool leftTrigger = IsGamepadButtonDown(gamepad_id, GAMEPAD_BUTTON_LEFT_TRIGGER_2);
   bool rightTrigger = IsGamepadButtonDown(gamepad_id, GAMEPAD_BUTTON_RIGHT_TRIGGER_2);
+  bool buttonFour = IsGamepadButtonDown(gamepad_id, GAMEPAD_BUTTON_RIGHT_FACE_DOWN);
 
   if (leftStickX > -leftStickDeadzoneX && leftStickX < leftStickDeadzoneX) leftStickX = 0.0f;
   if (leftStickY > -leftStickDeadzoneY && leftStickY < leftStickDeadzoneY) leftStickY = 0.0f;
@@ -25,6 +27,12 @@ void Player::gamepad_input(Acceleration& b, Acceleration& l, Acceleration& r) {
 
   b.accX = leftStickX * this->body_acc;
   b.accY = leftStickY * this->body_acc;
+
+  if (buttonFour)
+  {
+    b.accX *= 10;
+    b.accY *= 10;
+  }
 
   if (leftTrigger)
   {
@@ -193,14 +201,33 @@ Player init_player(ECS& ecs, Position& p_pos, Texture2D& gloveTex, Texture2D& ra
     bodyId,
     leftId,
     rightId,
-    2,
-    20,
-    0.5,
-    0.95,
-    50,
+    2,          // body acc
+    15,         // hand acc
+    0.5,        // hand retard
+    0.95,       // body retard
+    200,        // hand max dist
+    0,          // score
     next_gamepad_id++,
     true,
   };
+}
+
+void Player::draw_score(int player, int height) {
+  std::string score_text = "Player ";
+
+  if (player == 1) 
+  {
+    score_text += "ONE";  
+  }
+  else 
+  {
+    score_text += "TWO";  
+  }
+
+  score_text += ": ";
+  score_text += this->score;
+
+  DrawText(score_text.c_str(), 20, height, 32, BLACK);
 }
 
 void Player::drawArms(ECS& ecs)

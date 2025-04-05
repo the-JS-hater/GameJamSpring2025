@@ -20,14 +20,16 @@ struct Player
   float body_retarding_factor;
   float max_d;
 
-	int gamepad_id;
+  int score;
 
+	int gamepad_id;
   bool using_left;
 
   void input(ECS& ecs);
   void update(ECS& ecs);
 	void drawArms(ECS& ecs);
   void gamepad_input(Acceleration&, Acceleration&, Acceleration&);
+  void draw_score(int, int);
 };
 
 Player init_player(ECS &, Position&, Texture2D&, Texture2D&);

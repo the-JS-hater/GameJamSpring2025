@@ -79,12 +79,8 @@ void ECS::renderEntities()
 
 void ECS::resolveCollisions(vector<pair<Entity, Entity>> const& collisions) 
 {
-  if (!collisions.empty()) {
-    printf("--------------------------\n");
-  }
   for (const auto& [entityA, entityB] : collisions) 
   {
-    printf("A: %lu, B: %lu\n", entityA, entityB);
     Collider* colA = colliders.getComponent(entityA);
     Velocity* velA = velocities.getComponent(entityA);
 		Mass* massA = masses.getComponent(entityA);

@@ -69,6 +69,8 @@ int main()
   	hex.draw();
 		player_1.drawArms(ecs);
 		player_2.drawArms(ecs);
+    player_1.draw_score(1, 20);
+    player_2.draw_score(2, 50);
 		ecs.renderEntities();
 
 		drawCollisionDetection(vec, ecs);
