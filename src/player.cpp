@@ -103,11 +103,8 @@ void Player::update(ECS& ecs)
 }
 
 
-Player init_player(ECS& ecs, Position& p_pos) 
+Player init_player(ECS& ecs, Position& p_pos, Texture2D& gloveTex, Texture2D& ratTex) 
 {
-	Texture2D gloveTex = LoadTexture("resources/sprites/Glove.png");
-	Texture2D ratTex = LoadTexture("resources/sprites/Rat.png");
-	
 	Entity bodyId = ecs.createEntity();		
 	Entity leftId = ecs.createEntity();		
 	Entity rightId = ecs.createEntity();

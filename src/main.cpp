@@ -20,8 +20,14 @@ int main()
 
   Position pos_1 {static_cast<float>(WINDOW_W)/2.0f, static_cast<float>(WINDOW_H)/4.0f,};
   Position pos_2 {pos_1.x, pos_1.y * 3};
-	Player player_1 = init_player(ecs, pos_1);
-	Player player_2 = init_player(ecs, pos_2);
+
+	Texture2D gloveTex = LoadTexture("resources/sprites/Glove.png");
+	Texture2D ratTex = LoadTexture("resources/sprites/Rat.png");
+	Texture2D gloveTex2 = LoadTexture("resources/sprites/Glove2.png");
+	Texture2D ratTex2 = LoadTexture("resources/sprites/Rat2.png");
+
+	Player player_1 = init_player(ecs, pos_1, gloveTex, ratTex);
+	Player player_2 = init_player(ecs, pos_2, gloveTex2, ratTex2);
 		
 	ElectricHex hex(20.0f, 15.0f, 5.0f, 2.0f, 50.0f, 30.0f); 
 
