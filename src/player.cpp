@@ -227,8 +227,9 @@ void Player::drawArms(ECS& ecs)
 
 	Vector2 lPoint = { lPos->x + lDim->w / 2.0f, lPos->y + lDim->h / 2.0f };
 	Vector2 rPoint = { rPos->x + rDim->w / 2.0f, rPos->y + rDim->h / 2.0f };
-	Vector2 bPoint = { bPos->x + bDim->w / 2.0f, bPos->y + bDim->h / 2.0f };
+	Vector2 lbPoint = { bPos->x + 5.f, bPos->y + bDim->h / 2.0f };
+	Vector2 rbPoint = { bPos->x + bDim->w - 5.f, bPos->y + bDim->h / 2.0f };
 
-	DrawLineV(lPoint, bPoint, BROWN);  
-	DrawLineV(rPoint, bPoint, BROWN); 
+	DrawLineV(lPoint, lbPoint, BROWN);  
+	DrawLineV(rPoint, rbPoint, BROWN); 
 }
