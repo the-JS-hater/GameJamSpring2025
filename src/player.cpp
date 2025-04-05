@@ -92,12 +92,22 @@ void Player::update(ECS& ecs)
   Position b_pos = (*ecs.positions.getComponent(this->body));
   Position h_l_pos = (*ecs.positions.getComponent(this->left));
   Position h_r_pos = (*ecs.positions.getComponent(this->right));
-
+  
+  Velocity h_r_v(*ecs.velocities.getComponent(this->right));
   float h_l_dis = (float) sqrt(pow(h_l_pos.x - b_pos.x, 2) + pow(h_l_pos.y - b_pos.y, 2)); 
   float h_r_dis = (float) sqrt(pow(h_r_pos.x - b_pos.x, 2) + pow(h_r_pos.y - b_pos.y, 2)); 
 
+  float tmp;
   if (h_l_dis > this->max_d) // Left hand too far away
   {
+    Velocity h_l_v(*ecs.velocities.getComponent(this->left));
+    tmp = h_l_v.max_v;
+    
+    h_l_v.vx = - h_l_v.vx;
+    h_l_v.vy = - h_l_v.vy;
+
+    h_l_v.max_v = h_l_v.swap_max_v;
+    h_l_v.swap_max_v = tmp;
 
     Position new_pos {
       (b_pos.x + this->max_d * (h_l_pos.x - b_pos.x ) / h_l_dis),
@@ -105,10 +115,28 @@ void Player::update(ECS& ecs)
     };
 
     ecs.positions.setComponent(this->left, new_pos);
+    ecs.velocities.setComponent(this->left, h_l_v);
+  }
+  if (h_l_dis <= this->min_d) // Left hand back again
+  {
+    Velocity h_l_v(*ecs.velocities.getComponent(this->left));
+    tmp = h_l_v.max_v;
+    
+    h_l_v.vx = 0.f;
+    h_l_v.vy = 0.f;
+
+    h_l_v.max_v = h_l_v.swap_max_v;
+    h_l_v.swap_max_v = tmp;
+    
+    ecs.velocities.setComponent(this->left, h_l_v);
   }
 
   if (h_r_dis > this->max_d) // Right hand too far away
   {
+    Velocity h_r_v(*ecs.velocities.getComponent(this->right));
+    tmp = h_r_v.max_v;
+    h_r_v.max_v = h_r_v.swap_max_v;
+    h_r_v.swap_max_v = tmp;
 
     Position new_pos {
       (b_pos.x + this->max_d * (h_r_pos.x - b_pos.x ) / h_r_dis),
@@ -116,6 +144,19 @@ void Player::update(ECS& ecs)
     };
 
     ecs.positions.setComponent(this->right, new_pos);
+    ecs.velocities.setComponent(this->right, h_r_v);
+  }
+  if (h_r_dis <= this->min_d) // Right hand back again
+  {
+    Velocity h_r_v(*ecs.velocities.getComponent(this->left));
+    h_r_v.vx = 0.f;
+    h_r_v.vy = 0.f;
+
+    tmp = h_r_v.max_v;
+    h_r_v.max_v = h_r_v.swap_max_v;
+    h_r_v.swap_max_v = tmp;
+
+    ecs.velocities.setComponent(this->right, h_r_v);
   }
 
 	if (this->dashCooldown > 0) this->dashCooldown--;
@@ -131,7 +172,7 @@ Player init_player(ECS& ecs, Position& p_pos, Texture2D& gloveTex, Texture2D& ra
 	// Body
 	{
 		Position pos = p_pos;
-  	Velocity vel = { 0.0f, 0.0f, 2.0f };
+  	Velocity vel = { 0.0f, 0.0f, 2.0f, 0.0f };
   	Acceleration acc = { 0.0f, 0.0f, 0.0f };
   	Dimension dim = { 32.0f, 64.0f };
 		Mass mass = { 250.0f };
@@ -153,7 +194,7 @@ Player init_player(ECS& ecs, Position& p_pos, Texture2D& gloveTex, Texture2D& ra
 			p_pos.x - 32.0f,
       p_pos.y
 		};
-  	Velocity vel = { 0.0f, 0.0f, 7.0f };
+  	Velocity vel = { 0.0f, 0.0f, 7.0f, 0.0f };
   	Acceleration acc = { 0.0f, 0.0f, 0.0f };
   	Dimension dim = { 32.0f, 32.0f };
 		Mass mass = { 10000.0f };
@@ -175,7 +216,7 @@ Player init_player(ECS& ecs, Position& p_pos, Texture2D& gloveTex, Texture2D& ra
 			p_pos.x + 32.0f,
 		  p_pos.y	
 		};
-  	Velocity vel = { 0.0f, 0.0f, 7.0f };
+  	Velocity vel = { 0.0f, 0.0f, 7.0f, 0.0f };
   	Acceleration acc = { 0.0f, 0.0f, 0.0f };
   	Dimension dim = { 32.0f, 32.0f };
 		Mass mass = { 10000.0f };
@@ -197,16 +238,17 @@ Player init_player(ECS& ecs, Position& p_pos, Texture2D& gloveTex, Texture2D& ra
     bodyId,
     leftId,
     rightId,
-    2,          		// body acc
-    15,         		// hand acc
-		0,							// dash cooldown
-    0.5,        		// hand retard
-    0.95,       		// body retard
-    200,        		// hand max dist
-    0,          		// score
-    p_pos,
+    2,          		  // body acc
+    15,         		  // hand acc
+		0,							  // dash cooldown
+    0.5,        		  // hand retard
+    0.95,       		  // body retard
+    2,          		  // hand min dist
+    60,          		  // hand max dist
+    0,          		  // score
+    p_pos,            // spawn position
     next_gamepad_id++,
-    true,
+    true,             // starting hand (true: left, false: right)
   };
 }
 

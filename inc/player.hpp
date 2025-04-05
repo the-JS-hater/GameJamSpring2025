@@ -24,6 +24,7 @@ struct Player
 
   float hand_retarding_factor;
   float body_retarding_factor;
+  float min_d;
   float max_d;
 
   int score;
