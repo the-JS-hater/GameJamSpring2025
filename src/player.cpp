@@ -100,83 +100,89 @@ void Player::update(ECS& ecs)
   // printf("Right angle: %f\n", angle_r);
 }
 
-Player init_player(ECS& ecs) {
-	Texture2D body_tex = LoadTexture("resources/sprites/Spam.png");
-	Texture2D hand_l_tex = LoadTexture("resources/sprites/Spam.png");
-	Texture2D hand_r_tex = LoadTexture("resources/sprites/Spam.png");
-	Entity body = ecs.createEntity();
-	Entity hand_l = ecs.createEntity();
-	Entity hand_r = ecs.createEntity();
 
-  // Body
-  Position b_pos = { 
-    static_cast<float>(rand() % GetScreenWidth()), 
-    static_cast<float>(rand() % GetScreenHeight()) 
-  };
+Player init_player(ECS& ecs) 
+{
+	Texture2D gloveTex = LoadTexture("resources/sprites/Glove.png");
+	Texture2D ratTex = LoadTexture("resources/sprites/Rat.png");
+	
+	Entity bodyId = ecs.createEntity();		
+	Entity leftId = ecs.createEntity();		
+	Entity rightId = ecs.createEntity();
 
 	// Body
 	{
+		Position pos = {
+			static_cast<float>(GetScreenWidth() / 2),
+			static_cast<float>(GetScreenHeight() / 2)	
+		};
+  	Velocity vel = { 0.0f, 0.0f };
+  	Acceleration acc = { 0.0f, 0.0f };
+  	Dimension dim = { 32.0f, 64.0f };
+		Mass mass = { 1000.0f };
+
+  	Collider collider;
+  	collider.update(pos, dim);
+
+  	ecs.positions.insert(bodyId, pos);
+  	ecs.velocities.insert(bodyId, vel);
+  	ecs.accelerations.insert(bodyId, acc);
+  	ecs.dimensions.insert(bodyId, dim);
+  	ecs.colliders.insert(bodyId, collider);
+  	ecs.sprites.insert(bodyId, Sprite{ ratTex });
+		ecs.masses.insert(bodyId, mass);
+	}
+	// Glove left 
+	{
+		Position pos = {
+			static_cast<float>(GetScreenWidth() / 2) - 32.0f,
+			static_cast<float>(GetScreenHeight() / 2)	
+		};
   	Velocity vel = { 0.0f, 0.0f };
   	Acceleration acc = { 0.0f, 0.0f };
   	Dimension dim = { 32.0f, 32.0f };
+		Mass mass = { 250.0f };
+
   	Collider collider;
-  	collider.update(b_pos, dim);
+  	collider.update(pos, dim);
 
-  	ecs.positions.insert(body, b_pos);
-  	ecs.velocities.insert(body, vel);
-  	ecs.accelerations.insert(body, acc);
-  	ecs.dimensions.insert(body, dim);
-  	ecs.colliders.insert(body, collider);
-  	ecs.sprites.insert(body, Sprite{body_tex});
+  	ecs.positions.insert(leftId, pos);
+  	ecs.velocities.insert(leftId, vel);
+  	ecs.accelerations.insert(leftId, acc);
+  	ecs.dimensions.insert(leftId, dim);
+  	ecs.colliders.insert(leftId, collider);
+  	ecs.sprites.insert(leftId, Sprite{ gloveTex });
+		ecs.masses.insert(leftId, mass);
 	}
+	// Glove right 
+	{
+		Entity id = ecs.createEntity();
+		Position pos = {
+			static_cast<float>(GetScreenWidth() / 2) + 32.0f,
+			static_cast<float>(GetScreenHeight() / 2)	
+		};
+  	Velocity vel = { 0.0f, 0.0f };
+  	Acceleration acc = { 0.0f, 0.0f };
+  	Dimension dim = { 32.0f, 32.0f };
+		Mass mass = { 250.0f };
 
-  // Left hand
-  {
-    Position pos = { 
-      static_cast<float>(b_pos.x + rand() % 10), 
-      static_cast<float>(b_pos.y + rand() % 10) 
-    };
+  	Collider collider;
+  	collider.update(pos, dim);
 
-    Velocity vel = { 0.0f, 0.0f };
-    Acceleration acc = { 0.0f, 0.0f };
-    Dimension dim = { 32.0f, 32.0f };
-    Collider collider;
-    collider.update(pos, dim);
-
-    ecs.positions.insert(hand_l, pos);
-    ecs.velocities.insert(hand_l, vel);
-    ecs.accelerations.insert(hand_l, acc);
-    ecs.dimensions.insert(hand_l, dim);
-    ecs.colliders.insert(hand_l, collider);
-    ecs.sprites.insert(hand_l, Sprite{hand_l_tex});
-  }
-
-  // Right hand
-  {
-    Position pos = { 
-      static_cast<float>(b_pos.x + rand() % 10), 
-      static_cast<float>(b_pos.y + rand() % 10) 
-    };
-
-    Velocity vel = { 0.0f, 0.0f };
-    Acceleration acc = { 0.0f, 0.0f };
-    Dimension dim = { 32.0f, 32.0f };
-    Collider collider;
-    collider.update(pos, dim);
-
-    ecs.positions.insert(hand_r, pos);
-    ecs.velocities.insert(hand_r, vel);
-    ecs.accelerations.insert(hand_r, acc);
-    ecs.dimensions.insert(hand_r, dim);
-    ecs.colliders.insert(hand_r, collider);
-    ecs.sprites.insert(hand_r, Sprite{hand_r_tex});
-  }
+  	ecs.positions.insert(rightId, pos);
+  	ecs.velocities.insert(rightId, vel);
+  	ecs.accelerations.insert(rightId, acc);
+  	ecs.dimensions.insert(rightId, dim);
+  	ecs.colliders.insert(rightId, collider);
+  	ecs.sprites.insert(rightId, Sprite{ gloveTex });
+		ecs.masses.insert(rightId, mass);
+	}
 
 	static int next_gamepad_id{};
   return Player{
-    body,
-    hand_l,
-    hand_r,
+    bodyId,
+    leftId,
+    rightId,
     4,
     2,
     200,
@@ -185,3 +191,24 @@ Player init_player(ECS& ecs) {
   };
 }
 
+void Player::drawArms(ECS& ecs)
+{
+	Position* lPos = ecs.positions.getComponent(left);
+	Position* rPos = ecs.positions.getComponent(right);
+	Position* bPos = ecs.positions.getComponent(body);
+	
+	if (!lPos || !rPos || !bPos) return;
+
+	Dimension* lDim = ecs.dimensions.getComponent(left);
+	Dimension* rDim = ecs.dimensions.getComponent(right);
+	Dimension* bDim = ecs.dimensions.getComponent(body);
+	
+	if (!lDim || !rDim || !bDim) return;
+
+	Vector2 lPoint = { lPos->x + lDim->w / 2.0f, lPos->y + lDim->h / 2.0f };
+	Vector2 rPoint = { rPos->x + rDim->w / 2.0f, rPos->y + rDim->h / 2.0f };
+	Vector2 bPoint = { bPos->x + bDim->w / 2.0f, bPos->y + bDim->h / 2.0f };
+
+	DrawLineV(lPoint, bPoint, BROWN);  
+	DrawLineV(rPoint, bPoint, BROWN); 
+}

@@ -52,6 +52,7 @@ int main()
   	ClearBackground(WHITE);
   	
   	hex.draw();
+		player.drawArms(ecs);
 		ecs.renderEntities();
 
 

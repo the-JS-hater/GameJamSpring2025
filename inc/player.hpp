@@ -23,6 +23,7 @@ struct Player
 
   void input(ECS& ecs);
   void update(ECS& ecs);
+	void drawArms(ECS& ecs);
 };
 
 Player init_player(ECS &ecs);
