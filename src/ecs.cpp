@@ -118,8 +118,8 @@ void ECS::resolveCollisions(vector<pair<Entity, Entity>> const& collisions)
     float impactSpeedA = Vector2DotProduct(relVel, collisionNormal) * massFactorA;
     float impactSpeedB = Vector2DotProduct(relVel, collisionNormal) * massFactorB;
 
-    Vector2 velocityChangeA = Vector2Scale(collisionNormal, impactSpeedA);
-    Vector2 velocityChangeB = Vector2Scale(collisionNormal, impactSpeedB);
+    Vector2 velocityChangeA = Vector2Scale(collisionNormal, impactSpeedA * 3);
+    Vector2 velocityChangeB = Vector2Scale(collisionNormal, impactSpeedB * 3);
 
     Vector2 velA_new = Vector2Subtract(velA_old, velocityChangeA);
     Vector2 velB_new = Vector2Add(velB_old, velocityChangeB);
