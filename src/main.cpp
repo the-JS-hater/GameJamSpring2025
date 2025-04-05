@@ -67,19 +67,30 @@ int main()
 		player_2.drawArms(ecs);
 
     printf(
-      "Player 1\n\t- mass: %f\n\t- acc: (%f, %f)\n\t- vel: (%f, %f)\n",
+      "Player 1\n\tBody\n\t\t- mass: %f\n\t\t- acc: (%f, %f)\n\t\t- vel: (%f, %f)\n\tLeft\n\t\t- mass: %f\n\t\t- acc: (%f, %f)\n\t\t- vel: (%f, %f)\n\n\tRight\n\t\t- mass: %f\n\t\t- acc: (%f, %f)\n\t\t- vel: (%f, %f)\n",
+      (*ecs.masses.getComponent(player_1.body)).v,
+      (*ecs.accelerations.getComponent(player_1.body)).accX, (*ecs.accelerations.getComponent(player_1.body)).accY,
+      (*ecs.velocities.getComponent(player_1.body)).vx, (*ecs.velocities.getComponent(player_1.body)).vy,
       (*ecs.masses.getComponent(player_1.left)).v,
       (*ecs.accelerations.getComponent(player_1.left)).accX, (*ecs.accelerations.getComponent(player_1.left)).accY,
-      (*ecs.velocities.getComponent(player_1.left)).vx, (*ecs.velocities.getComponent(player_1.left)).vy
+      (*ecs.velocities.getComponent(player_1.left)).vx, (*ecs.velocities.getComponent(player_1.left)).vy,
+      (*ecs.masses.getComponent(player_1.right)).v,
+      (*ecs.accelerations.getComponent(player_1.right)).accX, (*ecs.accelerations.getComponent(player_1.right)).accY,
+      (*ecs.velocities.getComponent(player_1.right)).vx, (*ecs.velocities.getComponent(player_1.right)).vy
     );
 
     printf(
-      "Player 2\n\t- mass: %f\n\t- acc: (%f, %f)\n\t- vel: (%f, %f)\n",
+      "Player 2\n\tBody\n\t\t- mass: %f\n\t\t- acc: (%f, %f)\n\t\t- vel: (%f, %f)\n\tLeft\n\t\t- mass: %f\n\t\t- acc: (%f, %f)\n\t\t- vel: (%f, %f)\n\n\tRight\n\t\t- mass: %f\n\t\t- acc: (%f, %f)\n\t\t- vel: (%f, %f)\n",
+      (*ecs.masses.getComponent(player_2.body)).v,
+      (*ecs.accelerations.getComponent(player_2.body)).accX, (*ecs.accelerations.getComponent(player_2.body)).accY,
+      (*ecs.velocities.getComponent(player_2.body)).vx, (*ecs.velocities.getComponent(player_2.body)).vy,
       (*ecs.masses.getComponent(player_2.left)).v,
       (*ecs.accelerations.getComponent(player_2.left)).accX, (*ecs.accelerations.getComponent(player_2.left)).accY,
-      (*ecs.velocities.getComponent(player_2.left)).vx, (*ecs.velocities.getComponent(player_2.left)).vy
+      (*ecs.velocities.getComponent(player_2.left)).vx, (*ecs.velocities.getComponent(player_2.left)).vy,
+      (*ecs.masses.getComponent(player_2.right)).v,
+      (*ecs.accelerations.getComponent(player_2.right)).accX, (*ecs.accelerations.getComponent(player_2.right)).accY,
+      (*ecs.velocities.getComponent(player_2.right)).vx, (*ecs.velocities.getComponent(player_2.right)).vy
     );
-
 
 		ecs.renderEntities();
 

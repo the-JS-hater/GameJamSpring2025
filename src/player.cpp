@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <raylib.h>
 
-void Player::gamepad_input(ECS& ecs, Acceleration& b, Acceleration& l, Acceleration& r) {
+void Player::gamepad_input(Acceleration& b, Acceleration& l, Acceleration& r) {
   const float leftStickDeadzoneX = 0.1f;
   const float leftStickDeadzoneY = 0.1f;
   const float rightStickDeadzoneX = 0.1f;
@@ -47,7 +47,7 @@ void Player::input(ECS &ecs)
 
   if (IsGamepadAvailable(this->gamepad_id)) 
   {
-    gamepad_input(ecs, b_a, h_l_a, h_r_a);
+    gamepad_input(b_a, h_l_a, h_r_a);
   }
   else
   {

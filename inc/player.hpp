@@ -27,7 +27,7 @@ struct Player
   void input(ECS& ecs);
   void update(ECS& ecs);
 	void drawArms(ECS& ecs);
-  void gamepad_input(ECS&, Acceleration&, Acceleration&, Acceleration&);
+  void gamepad_input(Acceleration&, Acceleration&, Acceleration&);
 };
 
 Player init_player(ECS &, Position&, Texture2D&, Texture2D&);
