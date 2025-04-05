@@ -1,7 +1,15 @@
 #pragma once
+
 #include "components.hpp"
 #include "ecs.hpp"
 #include "entityType.hpp"
+#include "audioManager.hpp"
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <raylib.h>
+#include <string>
+
 
 struct Player
 {

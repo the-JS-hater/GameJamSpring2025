@@ -1,9 +1,5 @@
 #include "../inc/player.hpp"
-#include <cmath>
-#include <cstdio>
-#include <cstdlib>
-#include <raylib.h>
-#include <string>
+
 
 void Player::gamepad_input(Acceleration& b, Acceleration& l, Acceleration& r) {
   const float leftStickDeadzoneX = 0.1f;
@@ -32,6 +28,7 @@ void Player::gamepad_input(Acceleration& b, Acceleration& l, Acceleration& r) {
   {
     b.accX *= 10;
     b.accY *= 10;
+		playRandomWoosh();
   }
 
   if (leftTrigger)

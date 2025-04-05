@@ -4,5 +4,6 @@
 #include <cstdlib>
 
 
-void initSmacks();
+void initSounds();
 void playRandomSmack();
+void playRandomWoosh();

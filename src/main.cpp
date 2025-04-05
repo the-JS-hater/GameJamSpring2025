@@ -18,7 +18,7 @@ int main()
   InitWindow(WINDOW_W, WINDOW_H, "Game");
 	InitAudioDevice();                                     
 	srand(time(NULL));
-	initSmacks();
+	initSounds();
 
 	
 	ECS ecs; 
