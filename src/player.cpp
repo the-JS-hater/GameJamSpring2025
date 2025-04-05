@@ -8,15 +8,15 @@
 void Player::input(ECS &ecs)
 {
   Acceleration b_a {0, 0};
-  Acceleration h_l_a = (*ecs.accelerations.getComponent(this->hand_l));
-  Acceleration h_r_a = (*ecs.accelerations.getComponent(this->hand_r));
+  Acceleration h_l_a = {0, 0};
+  Acceleration h_r_a = {0, 0};
 
   if (IsKeyDown(KEY_SPACE)) this->using_left = !this->using_left;
 
-  if (IsKeyDown(KEY_UP)) b_a.accY -= this->body_acc;
-  if (IsKeyDown(KEY_LEFT)) b_a.accX -= this->body_acc;
-  if (IsKeyDown(KEY_DOWN)) b_a.accY += this->body_acc;
-  if (IsKeyDown(KEY_RIGHT)) b_a.accX += this->body_acc;
+  if (IsKeyDown(KEY_UP)) b_a.accY = -this->body_acc;
+  if (IsKeyDown(KEY_LEFT)) b_a.accX = -this->body_acc;
+  if (IsKeyDown(KEY_DOWN)) b_a.accY = this->body_acc;
+  if (IsKeyDown(KEY_RIGHT)) b_a.accX = this->body_acc;
 
   if (this->using_left)
   {
@@ -151,7 +151,7 @@ Player init_player(ECS& ecs) {
     body,
     hand_l,
     hand_r,
-    1,
+    4,
     2,
     200,
     true,
