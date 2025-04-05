@@ -1,10 +1,8 @@
 #pragma once 
 
-
-#include <memory>
-#include <iterator>
 #include <raylib.h>
 #include "../inc/ecs.hpp"
+#include "player.hpp"
 
 struct Triangle
 {
@@ -31,5 +29,5 @@ struct ElectricHex
 
 	void resolveCollision(ECS& ecs, Entity id);
 
-	void checkHexBounds(ECS& ecs);
+	void checkHexBounds(ECS& ecs, Player&, Player&);
 };

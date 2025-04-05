@@ -104,13 +104,21 @@ void ElectricHex::resolveCollision(ECS& ecs, Entity id)
 	return;
 }
 
-void ElectricHex::checkHexBounds(ECS& ecs)
+void ElectricHex::checkHexBounds(ECS& ecs, Player& p_1, Player& p_2)
 {
   for (Entity id = 0; id < ecs.nextEntity; ++id) 
 	{
 		Collider* collider = ecs.colliders.getComponent(id);
 		if (!collider) continue;
 		if (inBounds(collider->rect)) continue;
+
+    if (id == p_1.body) p_2.score++;
+    if (id == p_2.body) p_1.score++;
+
+    if (id == p_2.body || id == p_1.body) {
+      p_1.respawn(ecs);
+      p_2.respawn(ecs);
+    }
 
 		resolveCollision(ecs, id);
 	}

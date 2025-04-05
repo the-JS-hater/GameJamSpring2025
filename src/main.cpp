@@ -1,3 +1,4 @@
+#include <ctime>
 #include <raylib.h>
 #include "../inc/ecs.hpp"
 #include "../inc/quadtree.hpp"
@@ -59,7 +60,7 @@ int main()
   	auto vec = quadtree.getAllCollisions(ecs);
 
 		ecs.resolveCollisions(vec);
-		hex.checkHexBounds(ecs);
+		hex.checkHexBounds(ecs, player_1, player_2);
  		
 		/* RENDERING */
   	

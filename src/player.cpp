@@ -103,8 +103,6 @@ void Player::update(ECS& ecs)
       (b_pos.y + this->max_d * (h_l_pos.y - b_pos.y ) / h_l_dis)
     };
 
-    printf("Right pos: (%f, %f)\n\t- %f\n", new_pos.x, new_pos.y, h_l_dis);
-
     ecs.positions.setComponent(this->left, new_pos);
   }
 
@@ -116,13 +114,8 @@ void Player::update(ECS& ecs)
       (b_pos.y + this->max_d * (h_r_pos.y - b_pos.y ) / h_r_dis)
     };
 
-    printf("Right pos: (%f, %f)\n\t- %f\n", new_pos.x, new_pos.y, h_l_dis);
-
     ecs.positions.setComponent(this->right, new_pos);
   }
-
-  // std::cout << "Right hand angle: " << atan2(h_r_pos.y - b_pos.y, h_r_pos.x - b_pos.x) << std::endl;
-  // std::cout << "Left hand angle: " << atan2(h_l_pos.y - b_pos.y, h_l_pos.x - b_pos.x) << std::endl;
 }
 
 
@@ -207,9 +200,25 @@ Player init_player(ECS& ecs, Position& p_pos, Texture2D& gloveTex, Texture2D& ra
     0.95,       // body retard
     200,        // hand max dist
     0,          // score
+    p_pos,
     next_gamepad_id++,
     true,
   };
+}
+
+void Player::respawn(ECS& ecs) {
+  Position pos = this->spawn_pos;
+  Velocity vel {0, 0};
+  ecs.positions.setComponent(this->body, pos);  
+  ecs.velocities.setComponent(this->body, vel);  
+
+  pos.x += 32.0f;
+  ecs.positions.setComponent(this->left, pos);  
+  ecs.velocities.setComponent(this->left, vel);  
+
+  pos.x -= 64.0f;
+  ecs.positions.setComponent(this->right, pos);  
+  ecs.velocities.setComponent(this->right, vel);  
 }
 
 void Player::draw_score(int player, int height) {
@@ -225,7 +234,7 @@ void Player::draw_score(int player, int height) {
   }
 
   score_text += ": ";
-  score_text += this->score;
+  score_text += std::to_string(this->score);
 
   DrawText(score_text.c_str(), 20, height, 32, BLACK);
 }

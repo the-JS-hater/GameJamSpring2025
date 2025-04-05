@@ -1,11 +1,7 @@
+#pragma once
 #include "components.hpp"
 #include "ecs.hpp"
 #include "entityType.hpp"
-
-enum Hand {
-  left,
-  right
-};
 
 struct Player
 {
@@ -21,12 +17,14 @@ struct Player
   float max_d;
 
   int score;
+  Position spawn_pos;
 
 	int gamepad_id;
   bool using_left;
 
   void input(ECS& ecs);
   void update(ECS& ecs);
+  void respawn(ECS& ecs);
 	void drawArms(ECS& ecs);
   void gamepad_input(Acceleration&, Acceleration&, Acceleration&);
   void draw_score(int, int);

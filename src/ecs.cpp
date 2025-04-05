@@ -88,7 +88,7 @@ void ECS::resolveCollisions(vector<pair<Entity, Entity>> const& collisions)
     Collider* colB = colliders.getComponent(entityB);
     Velocity* velB = velocities.getComponent(entityB);
 		Mass* massB = masses.getComponent(entityB);
-																	 
+
     if (!colA || !velA || !massA || !colB || !velB || !massB) continue;
 
 
