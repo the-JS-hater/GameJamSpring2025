@@ -37,8 +37,6 @@ int main()
     player.input(ecs);
 		player.update(ecs);
 
-    game_pad();
-
     ecs.updateVelocities();
   	ecs.updateMovement();
 

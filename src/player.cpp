@@ -34,7 +34,7 @@ void Player::input(ECS &ecs)
     b_a.accX=leftStickX * this->body_acc;
     b_a.accY=leftStickY * this->body_acc;
    
-    if (rightDownButton) this->using_left = !this->using_left;
+    if (rightDownButton) printf("Hell yeah\n");
 
     if (this->using_left) {
       h_l_a.accX=rightStickX * this->hand_acc;
