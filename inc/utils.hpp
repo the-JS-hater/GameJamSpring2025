@@ -20,7 +20,8 @@ void genTestEntities(ECS& ecs, size_t count)
 		
 		Velocity vel = {
 			1.0f,
-			1.0f
+			1.0f,
+      2.0f
 		};
 
     Dimension dim = { 

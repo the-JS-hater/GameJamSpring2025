@@ -28,7 +28,7 @@ struct Mass
 
 struct Acceleration
 {
-	float accX, accY;
+	float accX, accY, retarding_factor;
 };
 
 struct Collider {

@@ -18,8 +18,6 @@ void ECS::destroyEntity(Entity id)
 
 void ECS::updateVelocities()
 {
-	float const retardingFactor = 0.95;
-
   for (Entity id = 0; id < nextEntity; ++id) 
 	{
     Acceleration* acc = accelerations.getComponent(id);
@@ -27,8 +25,8 @@ void ECS::updateVelocities()
 
 		if (!acc || !vel) continue;
 			
-		if (acc->accX == 0.0f) vel->vx *= retardingFactor;
-		if (acc->accY == 0.0f) vel->vy *= retardingFactor;
+		if (acc->accX == 0.0f) vel->vx *= acc->retarding_factor;
+		if (acc->accY == 0.0f) vel->vy *= acc->retarding_factor;
 		// so slow you might as well stop
 		if (vel->vx > 0.0f and vel->vx < 0.1f) vel->vx = 0.0f;
 		if (vel->vy > 0.0f and vel->vy < 0.1f) vel->vy = 0.0f;

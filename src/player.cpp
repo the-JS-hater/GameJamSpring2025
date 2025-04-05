@@ -17,7 +17,6 @@ void Player::gamepad_input(ECS& ecs, Acceleration& b, Acceleration& l, Accelerat
 
   bool leftTrigger = IsGamepadButtonDown(gamepad_id, GAMEPAD_BUTTON_LEFT_TRIGGER_2);
   bool rightTrigger = IsGamepadButtonDown(gamepad_id, GAMEPAD_BUTTON_RIGHT_TRIGGER_2);
-  bool rightDownButton = IsGamepadButtonDown(gamepad_id, GAMEPAD_BUTTON_RIGHT_FACE_DOWN);
 
   if (leftStickX > -leftStickDeadzoneX && leftStickX < leftStickDeadzoneX) leftStickX = 0.0f;
   if (leftStickY > -leftStickDeadzoneY && leftStickY < leftStickDeadzoneY) leftStickY = 0.0f;
@@ -42,9 +41,9 @@ void Player::gamepad_input(ECS& ecs, Acceleration& b, Acceleration& l, Accelerat
 
 void Player::input(ECS &ecs)
 {
-  Acceleration b_a {0, 0};
-  Acceleration h_l_a = {0, 0};
-  Acceleration h_r_a = {0, 0};
+  Acceleration b_a {0, 0, this->body_retarding_factor};
+  Acceleration h_l_a = {0, 0, this->hand_retarding_factor};
+  Acceleration h_r_a = {0, 0, this->hand_retarding_factor};
 
   if (IsGamepadAvailable(this->gamepad_id)) 
   {
@@ -74,9 +73,6 @@ void Player::input(ECS &ecs)
       if (IsKeyDown(KEY_D)) h_r_a.accX = this->hand_acc;
     }
   }
-
-  printf("(%f, %f)\n", b_a.accX, b_a.accY);
-
   ecs.accelerations.setComponent(this->body, b_a);
   ecs.accelerations.setComponent(this->left, h_l_a);
   ecs.accelerations.setComponent(this->right, h_r_a);
@@ -119,13 +115,13 @@ Player init_player(ECS& ecs)
 	// Body
 	{
 		Position pos = {
-			static_cast<float>(GetScreenWidth() / 2),
-			static_cast<float>(GetScreenHeight() / 2)	
+			static_cast<float>(GetScreenWidth() / 2.0f),
+			static_cast<float>(GetScreenHeight() / 2.0f)	
 		};
   	Velocity vel = { 0.0f, 0.0f, 2.0f };
-  	Acceleration acc = { 0.0f, 0.0f };
+  	Acceleration acc = { 0.0f, 0.0f, 0.0f };
   	Dimension dim = { 32.0f, 64.0f };
-		Mass mass = { 1000.0f };
+		Mass mass = { 250.0f };
 
   	Collider collider;
   	collider.update(pos, dim);
@@ -141,13 +137,13 @@ Player init_player(ECS& ecs)
 	// Glove left 
 	{
 		Position pos = {
-			static_cast<float>(GetScreenWidth() / 2) - 32.0f,
-			static_cast<float>(GetScreenHeight() / 2)	
+			static_cast<float>(GetScreenWidth() / 2.0f) - 32.0f,
+			static_cast<float>(GetScreenHeight() / 2.0f)	
 		};
-  	Velocity vel = { 0.0f, 0.0f, 4.0f };
-  	Acceleration acc = { 0.0f, 0.0f };
+  	Velocity vel = { 0.0f, 0.0f, 7.0f };
+  	Acceleration acc = { 0.0f, 0.0f, 0.0f };
   	Dimension dim = { 32.0f, 32.0f };
-		Mass mass = { 250.0f };
+		Mass mass = { 10000.0f };
 
   	Collider collider;
   	collider.update(pos, dim);
@@ -162,15 +158,14 @@ Player init_player(ECS& ecs)
 	}
 	// Glove right 
 	{
-		Entity id = ecs.createEntity();
 		Position pos = {
-			static_cast<float>(GetScreenWidth() / 2) + 32.0f,
-			static_cast<float>(GetScreenHeight() / 2)	
+			static_cast<float>(GetScreenWidth() / 2.0f) + 32.0f,
+			static_cast<float>(GetScreenHeight() / 2.0f)	
 		};
-  	Velocity vel = { 0.0f, 0.0f, 5.0f };
-  	Acceleration acc = { 0.0f, 0.0f };
+  	Velocity vel = { 0.0f, 0.0f, 7.0f };
+  	Acceleration acc = { 0.0f, 0.0f, 0.0f };
   	Dimension dim = { 32.0f, 32.0f };
-		Mass mass = { 250.0f };
+		Mass mass = { 10000.0f };
 
   	Collider collider;
   	collider.update(pos, dim);
@@ -189,8 +184,10 @@ Player init_player(ECS& ecs)
     bodyId,
     leftId,
     rightId,
-    4,
+    3,
     2,
+    0.70,
+    0.95,
     200,
     next_gamepad_id++,
     true,

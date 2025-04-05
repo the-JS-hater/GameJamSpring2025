@@ -87,20 +87,17 @@ bool ElectricHex::inBounds(Rectangle aabb)
 
 void ElectricHex::resolveCollision(ECS& ecs, Entity id)
 {
-  Position* pos = ecs.positions.getComponent(id);
   Collider* col = ecs.colliders.getComponent(id);
   Velocity* vel = ecs.velocities.getComponent(id);
 	Acceleration* acc = ecs.accelerations.getComponent(id);
   Mass* mass = ecs.masses.getComponent(id);
 		
-	if (!col || !vel || !mass || !acc || !pos) return;
+	if (!col || !vel || !mass || !acc) return;
+
+	Vector2 pos = { col->rect.x, col->rect.y };
 
 	vel->vx *= -1;
 	vel->vy *= -1;
-  pos->x += vel->vx; 
-  pos->y += vel->vy; 
-  acc->accX *= 0.0f;
-  acc->accY *= 0.0f;
 	return;
 }
 

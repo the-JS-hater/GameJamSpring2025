@@ -29,8 +29,6 @@ int main()
   };
   Quadtree quadtree(worldBounds);
 
-	genTestEntities(ecs, 10); 
-
 	SetTargetFPS(60);
 	while (!WindowShouldClose())
 	{
