@@ -53,7 +53,7 @@ void drawCollisionDetection(vector<pair<Entity, Entity>> vec, ECS& ecs)
 		auto box1 = ecs.colliders.getComponent(e1)->rect;
 		auto box2 = ecs.colliders.getComponent(e2)->rect;
 
-		DrawRectangleRec(box1, PINK);
-		DrawRectangleRec(box2, PINK);
+		DrawRectangleRec(box1, RED);
+		DrawRectangleRec(box2, RED);
 	}
 }

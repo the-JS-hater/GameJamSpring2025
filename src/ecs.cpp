@@ -37,11 +37,6 @@ void ECS::updateVelocities()
 		vel->vy += acc->accY;
 
 		// Fortkörningsböter!
-		// if (vel->vx > vel->max_v) vel->vx = vel->max_v;
-		// if (vel->vy > vel->max_v) vel->vy = vel->max_v;
-		// if (vel->vx < -vel->max_v) vel->vx = -vel->max_v;
-		// if (vel->vy < -vel->max_v) vel->vy = -vel->max_v;
-		
 		if (vel->vx > vel->max_v) vel->vx *= 	0.5f;
 		if (vel->vy > vel->max_v) vel->vy *= 	0.5f;
 		if (vel->vx < -vel->max_v) vel->vx *=	0.5f;
@@ -88,12 +83,10 @@ void ECS::resolveCollisions(vector<pair<Entity, Entity>> const& collisions)
     Collider* colA = colliders.getComponent(entityA);
     Velocity* velA = velocities.getComponent(entityA);
 		Mass* massA = masses.getComponent(entityA);
-    CollisionCallback* callbackA = collisionCallbacks.getComponent(entityA);
 
     Collider* colB = colliders.getComponent(entityB);
     Velocity* velB = velocities.getComponent(entityB);
 		Mass* massB = masses.getComponent(entityB);
-    CollisionCallback* callbackB = collisionCallbacks.getComponent(entityB);
 																	 
     if (!colA || !velA || !massA || !colB || !velB || !massB) continue;
 
@@ -125,12 +118,5 @@ void ECS::resolveCollisions(vector<pair<Entity, Entity>> const& collisions)
     velA->vy = velA_new.y;
     velB->vx = velB_new.x;
     velB->vy = velB_new.y;
-
-    if (callbackA && callbackA->onCollision) {
-        callbackA->onCollision(entityA, entityB);
-    }
-    if (callbackB && callbackB->onCollision) {
-        callbackB->onCollision(entityB, entityA);
-    }
   }
 }
