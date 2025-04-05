@@ -78,8 +78,8 @@ void Player::input(ECS &ecs)
   printf("(%f, %f)\n", b_a.accX, b_a.accY);
 
   ecs.accelerations.setComponent(this->body, b_a);
-  ecs.accelerations.setComponent(this->hand_l, h_l_a);
-  ecs.accelerations.setComponent(this->hand_r, h_r_a);
+  ecs.accelerations.setComponent(this->left, h_l_a);
+  ecs.accelerations.setComponent(this->right, h_r_a);
 }
 
 void Player::update(ECS& ecs)
