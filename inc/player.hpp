@@ -13,6 +13,7 @@ struct Player
 	Entity hand_l;
 	Entity hand_r;
 
+  double acc;
   size_t max_v;
   size_t max_d;
 

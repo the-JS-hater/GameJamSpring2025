@@ -51,11 +51,13 @@ void Player::update(ECS& ecs)
   {
 
     Position new_pos {
-      (b_pos.x + this->max_d * (h_l_pos.x - b_pos.x ) / h_l_dis),
-      (b_pos.y + this->max_d * (h_l_pos.y - b_pos.y ) / h_l_dis)
+      (b_pos.x + this->max_d * ((h_l_pos.x - b_pos.x ) / h_l_dis)),
+      (b_pos.y + this->max_d * ((h_l_pos.y - b_pos.y ) / h_l_dis))
     };
 
-    printf("Right pos: (%f, %f)\n\t- %f\n", new_pos.x, new_pos.y, h_l_dis);
+    // printf("Right pos: (%f, %f)\n\t- %f\n", new_pos.x, new_pos.y, h_l_dis);
+
+    double angle = atan2(h_l_pos.y - b_pos.y, h_l_pos.x - b_pos.x);
 
     ecs.positions.setComponent(this->hand_l, new_pos);
   }
@@ -64,17 +66,15 @@ void Player::update(ECS& ecs)
   {
 
     Position new_pos {
-      (b_pos.x + this->max_d * (h_r_pos.x - b_pos.x ) / h_r_dis),
-      (b_pos.y + this->max_d * (h_r_pos.y - b_pos.y ) / h_r_dis)
+      (b_pos.x + this->max_d * ((h_r_pos.x - b_pos.x ) / h_r_dis)),
+      (b_pos.y + this->max_d * ((h_r_pos.y - b_pos.y ) / h_r_dis))
     };
 
-    printf("Right pos: (%f, %f)\n\t- %f\n", new_pos.x, new_pos.y, h_l_dis);
+    // printf("Right pos: (%f, %f)\n\t- %f\n", new_pos.x, new_pos.y, h_l_dis);
 
+    double angle = atan2(h_r_pos.y - b_pos.y, h_r_pos.x - b_pos.x);
     ecs.positions.setComponent(this->hand_r, new_pos);
   }
-
-  // std::cout << "Right hand angle: " << atan2(h_r_pos.y - b_pos.y, h_r_pos.x - b_pos.x) << std::endl;
-  // std::cout << "Left hand angle: " << atan2(h_l_pos.y - b_pos.y, h_l_pos.x - b_pos.x) << std::endl;
 }
 
 Player init_player(ECS& ecs) {
