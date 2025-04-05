@@ -44,37 +44,28 @@ void Player::update(ECS& ecs)
   Position h_l_pos = (*ecs.positions.getComponent(this->hand_l));
   Position h_r_pos = (*ecs.positions.getComponent(this->hand_r));
 
+  Velocity h_l_v = (*ecs.velocities.getComponent(this->hand_l));
+
   float h_l_dis = (float) sqrt(pow(h_l_pos.x - b_pos.x, 2) + pow(h_l_pos.y - b_pos.y, 2)); 
   float h_r_dis = (float) sqrt(pow(h_r_pos.x - b_pos.x, 2) + pow(h_r_pos.y - b_pos.y, 2)); 
 
-  if (h_l_dis > this->max_d) // Left hand too far away
-  {
+  float angle_l = atan2(h_l_pos.y - b_pos.y, h_l_pos.x - b_pos.x);
+  float angle_r = atan2(h_r_pos.y - b_pos.y, h_r_pos.x - b_pos.x);
 
-    Position new_pos {
-      (b_pos.x + this->max_d * ((h_l_pos.x - b_pos.x ) / h_l_dis)),
-      (b_pos.y + this->max_d * ((h_l_pos.y - b_pos.y ) / h_l_dis))
+  if (h_l_dis > this->max_d) {
+
     };
 
-    // printf("Right pos: (%f, %f)\n\t- %f\n", new_pos.x, new_pos.y, h_l_dis);
-
-    // double angle = atan2(h_l_pos.y - b_pos.y, h_l_pos.x - b_pos.x);
-
-    ecs.positions.setComponent(this->hand_l, new_pos);
-  }
-
-  if (h_r_dis > this->max_d) // Right hand too far away
-  {
-
-    Position new_pos {
-      (b_pos.x + this->max_d * ((h_r_pos.x - b_pos.x ) / h_r_dis)),
-      (b_pos.y + this->max_d * ((h_r_pos.y - b_pos.y ) / h_r_dis))
+    Velocity actual = {
+      (float) sqrt(pow(along.vx, 2) + pow(out.vx, 2)),
+      (float) sqrt(pow(along.vy, 2) + pow(out.vy, 2)),
     };
 
-    // printf("Right pos: (%f, %f)\n\t- %f\n", new_pos.x, new_pos.y, h_l_dis);
-
-    // double angle = atan2(h_r_pos.y - b_pos.y, h_r_pos.x - b_pos.x);
-    ecs.positions.setComponent(this->hand_r, new_pos);
+    printf("actual x: %f\nactual y: %f\n", actual.vx, actual.vy);
   }
+
+  // printf("Left angle: %f\n", angle_l);
+  // printf("Right angle: %f\n", angle_r);
 }
 
 Player init_player(ECS& ecs) {
