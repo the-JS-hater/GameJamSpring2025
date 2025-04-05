@@ -31,14 +31,18 @@ void ECS::updateVelocities()
 		if (acc->accX == 0.0f) vel->vx *= retardingFactor;
 		if (acc->accY == 0.0f) vel->vy *= retardingFactor;
 		// so slow you might as well stop
-		if (vel->vx < 0.01f) vel->vx == 0.0f;
-		if (vel->vy < 0.01f) vel->vy == 0.0f;
+		if (vel->vx > 0.0f and vel->vx < 0.1f) vel->vx == 0.0f;
+		if (vel->vy > 0.0f and vel->vy < 0.1f) vel->vy == 0.0f;
+		if (vel->vx < 0.0f and vel->vx > -0.1f) vel->vx == 0.0f;
+		if (vel->vy < 0.0f and vel->vy > -0.1f) vel->vy == 0.0f;
 		// I am sped!
 		if (acc->accX > 0.0f) vel->vx += acc->accX;
 		if (acc->accY > 0.0f) vel->vy += acc->accY;
 		// Fortkörningsböter!
 		if (vel->vx > maxSpeed) vel->vx = maxSpeed;
 		if (vel->vy > maxSpeed) vel->vy = maxSpeed;
+		if (vel->vx < -maxSpeed) vel->vx = -maxSpeed;
+		if (vel->vy < -maxSpeed) vel->vy = -maxSpeed;
 	}
 }
 
