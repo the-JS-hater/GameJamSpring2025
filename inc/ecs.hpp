@@ -20,12 +20,15 @@ struct ECS
   SparseSet<CollisionCallback> collisionCallbacks;
 	SparseSet<Sprite> sprites;
 	SparseSet<Mass> masses;
+	SparseSet<Acceleration> accelerations;
 
   Entity createEntity();
 
   void destroyEntity(Entity);
 
   void updateMovement();
+	
+	void updateVelocities();
 
 	void renderEntities();
 

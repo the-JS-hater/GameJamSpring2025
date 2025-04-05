@@ -13,10 +13,16 @@ void genTestEntities(ECS& ecs, size_t count)
 			static_cast<float>(rand() % GetScreenHeight()) 
 		};
 
-    Velocity vel = { 
+    Acceleration acc = { 
 			static_cast<float>((rand() % 5) - 2), 
 			static_cast<float>((rand() % 5) - 2) 
 		};
+		
+		Velocity vel = {
+			0.0f,
+			0.0f
+		};
+
     Dimension dim = { 
 			32.0f,
 			32.0f

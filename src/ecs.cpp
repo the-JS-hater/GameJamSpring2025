@@ -15,6 +15,33 @@ void ECS::destroyEntity(Entity id)
 	collisionCallbacks.remove(id);
 }
 
+void ECS::updateVelocities()
+{
+	float const maxSpeed = 10.0f;
+	float const retardingFactor = 0.95;
+
+  for (Entity id = 0; id < nextEntity; ++id) 
+	{
+    Acceleration* acc = accelerations.getComponent(id);
+    Velocity* vel = velocities.getComponent(id);
+
+		if (!acc || !vel) continue;
+
+		// no acc? start retarding!
+		if (acc->accX == 0.0f) vel->vx *= retardingFactor;
+		if (acc->accY == 0.0f) vel->vy *= retardingFactor;
+		// so slow you might as well stop
+		if (vel->vx < 0.01f) vel->vx == 0.0f;
+		if (vel->vy < 0.01f) vel->vy == 0.0f;
+		// I am sped!
+		if (acc->accX > 0.0f) vel->vx += acc->accX;
+		if (acc->accY > 0.0f) vel->vy += acc->accY;
+		// Fortkörningsböter!
+		if (vel->vx > maxSpeed) vel->vx = maxSpeed;
+		if (vel->vy > maxSpeed) vel->vy = maxSpeed;
+	}
+}
+
 void ECS::updateMovement()
 {
   for (Entity id = 0; id < nextEntity; ++id) 

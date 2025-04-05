@@ -13,7 +13,7 @@ struct Position
 
 struct Velocity 
 {
-    float vx, vy;
+  float vx, vy;
 };
 
 struct Dimension
@@ -24,6 +24,11 @@ struct Dimension
 struct Mass
 {
 	float v;
+};
+
+struct Acceleration
+{
+	float accX, accY;
 };
 
 struct Collider {
