@@ -55,7 +55,7 @@ T* SparseSet<T>::getComponent(Entity id)
 }
 
 template<typename T>
-void SparseSet<T>::set_component(Entity id, T& val)
+void SparseSet<T>::setComponent(Entity id, T& val)
 {
   auto it = entityToIndex.find(id);
   if (it != entityToIndex.end()) 

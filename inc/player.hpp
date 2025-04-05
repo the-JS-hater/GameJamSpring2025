@@ -16,7 +16,8 @@ struct Player
   size_t max_v;
   size_t max_d;
 
-  enum Hand active_hand;
+  bool is_moving;
+  bool using_left;
 
   void input(ECS& ecs);
   void update(ECS& ecs);

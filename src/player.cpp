@@ -2,6 +2,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
+#include <iostream>
 #include <raylib.h>
 
 void Player::input(ECS &ecs)
@@ -10,40 +11,31 @@ void Player::input(ECS &ecs)
   Velocity h_l_v = (*ecs.velocities.getComponent(this->hand_l));
   Velocity h_r_v = (*ecs.velocities.getComponent(this->hand_r));
 
-  if (IsKeyDown(KEY_SPACE)) switch (this->active_hand)
-  {
-    case Hand::left:
-      this->active_hand = Hand::right;
-      break;
-    case Hand::right:
-      this->active_hand = Hand::left;
-      break;
-  };
+  if (IsKeyDown(KEY_SPACE)) this->using_left = !this->using_left;
 
   if (IsKeyDown(KEY_UP)) b_v.vy = -2.0f;
   if (IsKeyDown(KEY_LEFT)) b_v.vx = -2.0f;
   if (IsKeyDown(KEY_DOWN)) b_v.vy = 2.0f;
   if (IsKeyDown(KEY_RIGHT)) b_v.vx = 2.0f;
 
-  switch (this->active_hand)
+  if (this->using_left)
   {
-    case Hand::left: 
-      if (IsKeyDown(KEY_W)) h_l_v.vy -= 1.0f;
-      if (IsKeyDown(KEY_A)) h_l_v.vx -= 1.0f;
-      if (IsKeyDown(KEY_S)) h_l_v.vy += 1.0f;
-      if (IsKeyDown(KEY_D)) h_l_v.vx += 1.0f;
-      break;
-    case Hand::right: 
-      if (IsKeyDown(KEY_W)) h_r_v.vy -= 1.0f;
-      if (IsKeyDown(KEY_A)) h_r_v.vx -= 1.0f;
-      if (IsKeyDown(KEY_S)) h_r_v.vy += 1.0f;
-      if (IsKeyDown(KEY_D)) h_r_v.vx += 1.0f;
-      break;
+    if (IsKeyDown(KEY_W)) h_l_v.vy -= 1.0f;
+    if (IsKeyDown(KEY_A)) h_l_v.vx -= 1.0f;
+    if (IsKeyDown(KEY_S)) h_l_v.vy += 1.0f;
+    if (IsKeyDown(KEY_D)) h_l_v.vx += 1.0f;
+  }
+  else 
+  {
+    if (IsKeyDown(KEY_W)) h_r_v.vy -= 1.0f;
+    if (IsKeyDown(KEY_A)) h_r_v.vx -= 1.0f;
+    if (IsKeyDown(KEY_S)) h_r_v.vy += 1.0f;
+    if (IsKeyDown(KEY_D)) h_r_v.vx += 1.0f;
   }
 
-  ecs.velocities.set_component(this->body, b_v);
-  ecs.velocities.set_component(this->hand_l, h_l_v);
-  ecs.velocities.set_component(this->hand_r, h_r_v);
+  ecs.velocities.setComponent(this->body, b_v);
+  ecs.velocities.setComponent(this->hand_l, h_l_v);
+  ecs.velocities.setComponent(this->hand_r, h_r_v);
 }
 
 void Player::update(ECS& ecs)
@@ -57,21 +49,32 @@ void Player::update(ECS& ecs)
 
   if (h_l_dis > this->max_d) // Left hand too far away
   {
-    // std::cout << "Left hand angle: " << atan2(h_l_pos.y - b_pos.y, h_l_pos.x - b_pos.x) << std::endl;
 
-    // Temporary dont ask
-    (*ecs.velocities.getComponent(this->hand_l)).vx = 0.0;
-    (*ecs.velocities.getComponent(this->hand_l)).vy = 0.0;
+    Position new_pos {
+      (b_pos.x + this->max_d * (h_l_pos.x - b_pos.x ) / h_l_dis),
+      (b_pos.y + this->max_d * (h_l_pos.y - b_pos.y ) / h_l_dis)
+    };
+
+    printf("Right pos: (%f, %f)\n\t- %f\n", new_pos.x, new_pos.y, h_l_dis);
+
+    ecs.positions.setComponent(this->hand_l, new_pos);
   }
 
   if (h_r_dis > this->max_d) // Right hand too far away
   {
-    // std::cout << "Right hand angle: " << atan2(h_r_pos.y - b_pos.y, h_r_pos.x - b_pos.x) << std::endl;
 
-    // Temporary dont ask
-    (*ecs.velocities.getComponent(this->hand_r)).vx = 0.0;
-    (*ecs.velocities.getComponent(this->hand_r)).vy = 0.0;
+    Position new_pos {
+      (b_pos.x + this->max_d * (h_r_pos.x - b_pos.x ) / h_r_dis),
+      (b_pos.y + this->max_d * (h_r_pos.y - b_pos.y ) / h_r_dis)
+    };
+
+    printf("Right pos: (%f, %f)\n\t- %f\n", new_pos.x, new_pos.y, h_l_dis);
+
+    ecs.positions.setComponent(this->hand_r, new_pos);
   }
+
+  // std::cout << "Right hand angle: " << atan2(h_r_pos.y - b_pos.y, h_r_pos.x - b_pos.x) << std::endl;
+  // std::cout << "Left hand angle: " << atan2(h_l_pos.y - b_pos.y, h_l_pos.x - b_pos.x) << std::endl;
 }
 
 Player init_player(ECS& ecs) {
@@ -138,6 +141,6 @@ Player init_player(ECS& ecs) {
     ecs.sprites.insert(hand_r, Sprite{hand_r_tex});
   }
 
-  return Player{ body, hand_l, hand_r, 2, 200, Hand::left };
+  return Player{ body, hand_l, hand_r, 3, 200, false, true };
 }
 
