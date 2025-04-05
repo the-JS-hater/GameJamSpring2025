@@ -64,8 +64,6 @@ void SparseSet<T>::setComponent(Entity id, T& val)
   }
 }
 
-
-
 template<typename T>
 size_t SparseSet<T>::size() const 
 {

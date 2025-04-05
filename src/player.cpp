@@ -91,18 +91,21 @@ Player init_player(ECS& ecs) {
     static_cast<float>(rand() % GetScreenHeight()) 
   };
 
-  Velocity vel = { 0.0f, 0.0f };
-  Acceleration acc = { 0.0f, 0.0f };
-  Dimension dim = { 32.0f, 32.0f };
-  Collider collider;
-  collider.update(b_pos, dim);
+	// Body
+	{
+  	Velocity vel = { 0.0f, 0.0f };
+  	Acceleration acc = { 0.0f, 0.0f };
+  	Dimension dim = { 32.0f, 32.0f };
+  	Collider collider;
+  	collider.update(b_pos, dim);
 
-  ecs.positions.insert(body, b_pos);
-  ecs.velocities.insert(body, vel);
-  ecs.accelerations.insert(body, acc);
-  ecs.dimensions.insert(body, dim);
-  ecs.colliders.insert(body, collider);
-  ecs.sprites.insert(body, Sprite{body_tex});
+  	ecs.positions.insert(body, b_pos);
+  	ecs.velocities.insert(body, vel);
+  	ecs.accelerations.insert(body, acc);
+  	ecs.dimensions.insert(body, dim);
+  	ecs.colliders.insert(body, collider);
+  	ecs.sprites.insert(body, Sprite{body_tex});
+	}
 
   // Left hand
   {
@@ -124,7 +127,6 @@ Player init_player(ECS& ecs) {
     ecs.colliders.insert(hand_l, collider);
     ecs.sprites.insert(hand_l, Sprite{hand_l_tex});
   }
-
 
   // Right hand
   {

@@ -1,5 +1,6 @@
 #include "../inc/ecs.hpp"
 
+#include <stdio.h>
 
 Entity ECS::createEntity()
 {
@@ -17,7 +18,7 @@ void ECS::destroyEntity(Entity id)
 
 void ECS::updateVelocities()
 {
-	float const maxSpeed = 10.0f;
+	float const maxSpeed = 1.0f;
 	float const retardingFactor = 0.95;
 
   for (Entity id = 0; id < nextEntity; ++id) 
@@ -26,8 +27,7 @@ void ECS::updateVelocities()
     Velocity* vel = velocities.getComponent(id);
 
 		if (!acc || !vel) continue;
-
-		// no acc? start retarding!
+			
 		if (acc->accX == 0.0f) vel->vx *= retardingFactor;
 		if (acc->accY == 0.0f) vel->vy *= retardingFactor;
 		// so slow you might as well stop

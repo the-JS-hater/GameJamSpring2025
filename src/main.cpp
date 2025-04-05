@@ -28,17 +28,22 @@ int main()
     static_cast<float>(GetScreenHeight())
   };
   Quadtree quadtree(worldBounds);
-	
+
+	genTestEntities(ecs, 10); 
+
 	SetTargetFPS(60);
 	while (!WindowShouldClose())
 	{
 		/* UPDATE */
     player.input(ecs);
 		player.update(ecs);
-  	ecs.updateMovement();
+
     ecs.updateVelocities();
+  	ecs.updateMovement();
+
   	quadtree.update(ecs);
   	auto vec = quadtree.getAllCollisions(ecs);
+
 		ecs.resolveCollisions(vec);
 		hex.checkHexBounds(ecs);
  		

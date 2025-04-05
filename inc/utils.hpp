@@ -1,10 +1,10 @@
 #pragma once
 
+#include <stdio.h>
 
 void genTestEntities(ECS& ecs, size_t count) 
 {
 	Texture2D tex = LoadTexture("resources/sprites/Spam.png");
-
   for (size_t i = 0; i < count; ++i) {
     Entity entity = ecs.createEntity();
     
@@ -14,13 +14,13 @@ void genTestEntities(ECS& ecs, size_t count)
 		};
 
     Acceleration acc = { 
-			static_cast<float>((rand() % 5) - 2), 
-			static_cast<float>((rand() % 5) - 2) 
+			static_cast<float>((rand() % 2) - 0), 
+			static_cast<float>((rand() % 2) - 0) 
 		};
 		
 		Velocity vel = {
-			0.0f,
-			0.0f
+			1.0f,
+			1.0f
 		};
 
     Dimension dim = { 
@@ -37,14 +37,10 @@ void genTestEntities(ECS& ecs, size_t count)
     
     ecs.positions.insert(entity, pos);
     ecs.velocities.insert(entity, vel);
+		ecs.accelerations.insert(entity, acc);
     ecs.dimensions.insert(entity, dim);
     ecs.colliders.insert(entity, collider);
 		ecs.masses.insert(entity, mass);
-		//CollisionCallback testCallback([&ecs](Entity this_id, Entity other_id){
-		//	ecs.destroyEntity(other_id);
-		//});
-		//ecs.collisionCallbacks.insert(entity, testCallback);
- 		
 		ecs.sprites.insert(entity, Sprite{tex});
 	}
 }
