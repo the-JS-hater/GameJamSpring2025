@@ -10,8 +10,8 @@ enum Hand {
 struct Player
 {
 	Entity body;
-	Entity hand_l;
-	Entity hand_r;
+	Entity left;
+	Entity right;
 
   float body_acc;
   float hand_acc;

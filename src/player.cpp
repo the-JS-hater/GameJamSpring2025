@@ -72,17 +72,17 @@ void Player::input(ECS &ecs)
   }
 
   ecs.accelerations.setComponent(this->body, b_a);
-  ecs.accelerations.setComponent(this->hand_l, h_l_a);
-  ecs.accelerations.setComponent(this->hand_r, h_r_a);
+  ecs.accelerations.setComponent(this->left, h_l_a);
+  ecs.accelerations.setComponent(this->right, h_r_a);
 }
 
 void Player::update(ECS& ecs)
 {
   Position b_pos = (*ecs.positions.getComponent(this->body));
-  Position h_l_pos = (*ecs.positions.getComponent(this->hand_l));
-  Position h_r_pos = (*ecs.positions.getComponent(this->hand_r));
+  Position h_l_pos = (*ecs.positions.getComponent(this->left));
+  Position h_r_pos = (*ecs.positions.getComponent(this->right));
 
-  Velocity h_l_v = (*ecs.velocities.getComponent(this->hand_l));
+  Velocity h_l_v = (*ecs.velocities.getComponent(this->left));
 
   float h_l_dis = (float) sqrt(pow(h_l_pos.x - b_pos.x, 2) + pow(h_l_pos.y - b_pos.y, 2)); 
   float h_r_dis = (float) sqrt(pow(h_r_pos.x - b_pos.x, 2) + pow(h_r_pos.y - b_pos.y, 2)); 
