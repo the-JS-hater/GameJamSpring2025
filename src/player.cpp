@@ -13,10 +13,10 @@ void Player::input(ECS &ecs)
 
   if (IsKeyDown(KEY_SPACE)) this->using_left = !this->using_left;
 
-  if (IsKeyDown(KEY_UP)) b_a.accY = -this->body_acc;
-  if (IsKeyDown(KEY_LEFT)) b_a.accX = -this->body_acc;
-  if (IsKeyDown(KEY_DOWN)) b_a.accY = this->body_acc;
-  if (IsKeyDown(KEY_RIGHT)) b_a.accX = this->body_acc;
+  if (IsKeyDown(KEY_UP)) b_a.accY -= this->body_acc;
+  if (IsKeyDown(KEY_LEFT)) b_a.accX -= this->body_acc;
+  if (IsKeyDown(KEY_DOWN)) b_a.accY += this->body_acc;
+  if (IsKeyDown(KEY_RIGHT)) b_a.accX += this->body_acc;
 
   if (this->using_left)
   {
