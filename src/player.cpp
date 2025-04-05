@@ -80,22 +80,32 @@ void Player::input(ECS &ecs)
 
 void Player::update(ECS& ecs)
 {
-  Position b_pos = (*ecs.positions.getComponent(this->body));
-  Position h_l_pos = (*ecs.positions.getComponent(this->left));
-  Position h_r_pos = (*ecs.positions.getComponent(this->right));
+  Rectangle b_bounds = ecs.colliders.getComponent(this->body)->rect;
+  Rectangle h_l_bounds = ecs.colliders.getComponent(this->left)->rect;
+  Rectangle h_r_bounds = ecs.colliders.getComponent(this->right)->rect;
 
-  Velocity h_l_v = (*ecs.velocities.getComponent(this->left));
+  Velocity b_v = *ecs.velocities.getComponent(this->body);
+  Velocity h_l_v = *ecs.velocities.getComponent(this->body);
+  Velocity h_r_v = *ecs.velocities.getComponent(this->body);
 
-  float h_l_dis = (float) sqrt(pow(h_l_pos.x - b_pos.x, 2) + pow(h_l_pos.y - b_pos.y, 2)); 
-  float h_r_dis = (float) sqrt(pow(h_r_pos.x - b_pos.x, 2) + pow(h_r_pos.y - b_pos.y, 2)); 
+  Vector2 b_mid{b_bounds.x + b_bounds.width/2, b_bounds.y + b_bounds.height/2};
+  Vector2 h_l_mid{h_l_bounds.x + h_l_bounds.width/2, h_l_bounds.y + h_l_bounds.height/2};
+  Vector2 h_r_mid{h_r_bounds.x + h_r_bounds.width/2, h_r_bounds.y + h_r_bounds.height/2};
 
-  float angle_l = atan2(h_l_pos.y - b_pos.y, h_l_pos.x - b_pos.x);
-  float angle_r = atan2(h_r_pos.y - b_pos.y, h_r_pos.x - b_pos.x);
+//  float h_l_dis = (float) sqrt(pow(h_l_pos.x - b_pos.x, 2) + pow(h_l_pos.y - b_pos.y, 2)); 
+//  float h_r_dis = (float) sqrt(pow(h_r_pos.x - b_pos.x, 2) + pow(h_r_pos.y - b_pos.y, 2)); 
 
-  if (h_l_dis > this->max_d) {
+//  float angle_l = atan2(h_l_pos.y - b_pos.y, h_l_pos.x - b_pos.x);
+//  float angle_r = atan2(h_r_pos.y - b_pos.y, h_r_pos.x - b_pos.x);
 
+  Velocity net_v{};
 
+  if (!CheckCollisionPointCircle(h_l_mid, b_mid, this->max_d)) {
+    std::cout << "Lul left" << std::endl;
+  }
 
+  if (!CheckCollisionPointCircle(h_r_mid, b_mid, this->max_d)) {
+    std::cout << "Lul right" << std::endl;
   }
 
   // printf("Left angle: %f\n", angle_l);

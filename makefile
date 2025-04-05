@@ -13,11 +13,14 @@ DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 _OBJ = main.o sparseSet.o ecs.o quadtree.o player.o hex.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
-$(ODIR):
-	mkdir -p $(ODIR)
+.PHONY $(ODIR):
+
 
 $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS) $(ODIR)
 	$(CC) -c -o $@ $< $(FLAGS) $(LIBS) 
+
+$(ODIR):
+	mkdir -p $(ODIR)
 
 game.exe: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
