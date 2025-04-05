@@ -17,7 +17,8 @@ int main()
 	srand(time(NULL));
 	
 	ECS ecs; 
-	Player player = init_player(ecs);
+	Player player_1 = init_player(ecs);
+	Player player_2 = init_player(ecs);
 		
 	ElectricHex hex(20.0f, 15.0f, 5.0f, 2.0f, 50.0f, 30.0f); 
 
@@ -34,8 +35,10 @@ int main()
 	while (!WindowShouldClose())
 	{
 		/* UPDATE */
-    player.input(ecs);
-		player.update(ecs);
+    player_1.input(ecs);
+    player_2.input(ecs);
+		player_1.update(ecs);
+		player_2.update(ecs);
 
     ecs.updateVelocities();
   	ecs.updateMovement();

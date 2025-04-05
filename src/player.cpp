@@ -2,8 +2,43 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
-#include <iostream>
 #include <raylib.h>
+
+void Player::gamepad_input(ECS& ecs, Acceleration& b, Acceleration& l, Acceleration& r) {
+  const float leftStickDeadzoneX = 0.1f;
+  const float leftStickDeadzoneY = 0.1f;
+  const float rightStickDeadzoneX = 0.1f;
+  const float rightStickDeadzoneY = 0.1f;
+
+  float leftStickX = GetGamepadAxisMovement(gamepad_id, GAMEPAD_AXIS_LEFT_X);
+  float leftStickY = GetGamepadAxisMovement(gamepad_id, GAMEPAD_AXIS_LEFT_Y);
+  float rightStickX = GetGamepadAxisMovement(gamepad_id, GAMEPAD_AXIS_RIGHT_X);
+  float rightStickY = GetGamepadAxisMovement(gamepad_id, GAMEPAD_AXIS_RIGHT_Y);
+
+  bool leftTrigger = IsGamepadButtonDown(gamepad_id, GAMEPAD_BUTTON_LEFT_TRIGGER_2);
+  bool rightTrigger = IsGamepadButtonDown(gamepad_id, GAMEPAD_BUTTON_RIGHT_TRIGGER_2);
+  bool rightDownButton = IsGamepadButtonDown(gamepad_id, GAMEPAD_BUTTON_RIGHT_FACE_DOWN);
+
+  if (leftStickX > -leftStickDeadzoneX && leftStickX < leftStickDeadzoneX) leftStickX = 0.0f;
+  if (leftStickY > -leftStickDeadzoneY && leftStickY < leftStickDeadzoneY) leftStickY = 0.0f;
+  if (rightStickX > -rightStickDeadzoneX && rightStickX < rightStickDeadzoneX) rightStickX = 0.0f;
+  if (rightStickY > -rightStickDeadzoneY && rightStickY < rightStickDeadzoneY) rightStickY = 0.0f;
+
+  b.accX = leftStickX * this->body_acc;
+  b.accY = leftStickY * this->body_acc;
+
+  if (leftTrigger)
+  {
+    l.accX = rightStickX * this->hand_acc;
+    l.accY = rightStickY * this->hand_acc;
+  }
+  
+  if (rightTrigger)
+  {
+    r.accX = rightStickX * this->hand_acc;
+    r.accY = rightStickY * this->hand_acc;
+  }
+}
 
 void Player::input(ECS &ecs)
 {
@@ -11,40 +46,9 @@ void Player::input(ECS &ecs)
   Acceleration h_l_a = {0, 0};
   Acceleration h_r_a = {0, 0};
 
-  if (IsGamepadAvailable(this->gamepad_id)) {
-    const float leftStickDeadzoneX = 0.1f;
-    const float leftStickDeadzoneY = 0.1f;
-    const float rightStickDeadzoneX = 0.1f;
-    const float rightStickDeadzoneY = 0.1f;
-
-    float leftStickX = GetGamepadAxisMovement(gamepad_id, GAMEPAD_AXIS_LEFT_X);
-    float leftStickY = GetGamepadAxisMovement(gamepad_id, GAMEPAD_AXIS_LEFT_Y);
-    float rightStickX = GetGamepadAxisMovement(gamepad_id, GAMEPAD_AXIS_RIGHT_X);
-    float rightStickY = GetGamepadAxisMovement(gamepad_id, GAMEPAD_AXIS_RIGHT_Y);
-    float leftTrigger = GetGamepadAxisMovement(gamepad_id, GAMEPAD_AXIS_LEFT_TRIGGER);
-    float rightTrigger = GetGamepadAxisMovement(gamepad_id, GAMEPAD_AXIS_RIGHT_TRIGGER);
-    
-    bool rightDownButton = IsGamepadButtonDown(gamepad_id, GAMEPAD_BUTTON_RIGHT_FACE_DOWN);
-    
-    if (leftStickX > -leftStickDeadzoneX && leftStickX < leftStickDeadzoneX) leftStickX = 0.0f;
-    if (leftStickY > -leftStickDeadzoneY && leftStickY < leftStickDeadzoneY) leftStickY = 0.0f;
-    if (rightStickX > -rightStickDeadzoneX && rightStickX < rightStickDeadzoneX) rightStickX = 0.0f;
-    if (rightStickY > -rightStickDeadzoneY && rightStickY < rightStickDeadzoneY) rightStickY = 0.0f;
-
-    b_a.accX=leftStickX * this->body_acc;
-    b_a.accY=leftStickY * this->body_acc;
-   
-    if (rightDownButton) printf("Hell yeah\n");
-
-    if (this->using_left) {
-      h_l_a.accX=rightStickX * this->hand_acc;
-      h_l_a.accY=rightStickY * this->hand_acc;
-    }
-    else
-    {
-      h_r_a.accX=rightStickX * this->hand_acc;
-      h_r_a.accY=rightStickY * this->hand_acc;
-    }
+  if (IsGamepadAvailable(this->gamepad_id)) 
+  {
+    gamepad_input(ecs, b_a, h_l_a, h_r_a);
   }
   else
   {
@@ -71,9 +75,11 @@ void Player::input(ECS &ecs)
     }
   }
 
+  printf("(%f, %f)\n", b_a.accX, b_a.accY);
+
   ecs.accelerations.setComponent(this->body, b_a);
-  ecs.accelerations.setComponent(this->left, h_l_a);
-  ecs.accelerations.setComponent(this->right, h_r_a);
+  ecs.accelerations.setComponent(this->hand_l, h_l_a);
+  ecs.accelerations.setComponent(this->hand_r, h_r_a);
 }
 
 void Player::update(ECS& ecs)

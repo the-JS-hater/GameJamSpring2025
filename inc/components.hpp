@@ -13,7 +13,7 @@ struct Position
 
 struct Velocity 
 {
-  float vx, vy;
+  float vx, vy, max_v;
 };
 
 struct Dimension

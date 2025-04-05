@@ -1,7 +1,5 @@
 #include "../inc/ecs.hpp"
 
-#include <stdio.h>
-
 Entity ECS::createEntity()
 {
   return nextEntity++;
@@ -13,12 +11,13 @@ void ECS::destroyEntity(Entity id)
   velocities.remove(id);
 	dimensions.remove(id);
 	colliders.remove(id);
+  accelerations.remove(id);
+  masses.remove(id);
 	collisionCallbacks.remove(id);
 }
 
 void ECS::updateVelocities()
 {
-	float const maxSpeed = 1.0f;
 	float const retardingFactor = 0.95;
 
   for (Entity id = 0; id < nextEntity; ++id) 
@@ -40,10 +39,10 @@ void ECS::updateVelocities()
 		vel->vy += acc->accY;
 
 		// Fortkörningsböter!
-		if (vel->vx > maxSpeed) vel->vx = maxSpeed;
-		if (vel->vy > maxSpeed) vel->vy = maxSpeed;
-		if (vel->vx < -maxSpeed) vel->vx = -maxSpeed;
-		if (vel->vy < -maxSpeed) vel->vy = -maxSpeed;
+		if (vel->vx > vel->max_v) vel->vx = vel->max_v;
+		if (vel->vy > vel->max_v) vel->vy = vel->max_v;
+		if (vel->vx < -vel->max_v) vel->vx = -vel->max_v;
+		if (vel->vy < -vel->max_v) vel->vy = -vel->max_v;
 	}
 }
 

@@ -1,6 +1,6 @@
+#include "components.hpp"
 #include "ecs.hpp"
 #include "entityType.hpp"
-#include <cstddef>
 
 enum Hand {
   left,
@@ -24,7 +24,8 @@ struct Player
   void input(ECS& ecs);
   void update(ECS& ecs);
 	void drawArms(ECS& ecs);
+  void gamepad_input(ECS&, Acceleration&, Acceleration&, Acceleration&);
 };
 
-Player init_player(ECS &ecs);
+Player init_player(ECS &);
 
