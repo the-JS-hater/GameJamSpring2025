@@ -42,10 +42,10 @@ void ECS::updateVelocities()
 		// if (vel->vx < -vel->max_v) vel->vx = -vel->max_v;
 		// if (vel->vy < -vel->max_v) vel->vy = -vel->max_v;
 		
-		if (vel->vx > vel->max_v) vel->vx *= retardingFactor;
-		if (vel->vy > vel->max_v) vel->vy *= retardingFactor;
-		if (vel->vx < -vel->max_v) vel->vx *= retardingFactor;
-		if (vel->vy < -vel->max_v) vel->vy *= retardingFactor;
+		if (vel->vx > vel->max_v) vel->vx *= 	0.5f;
+		if (vel->vy > vel->max_v) vel->vy *= 	0.5f;
+		if (vel->vx < -vel->max_v) vel->vx *=	0.5f;
+		if (vel->vy < -vel->max_v) vel->vy *=	0.5f;
 	}
 }
 
