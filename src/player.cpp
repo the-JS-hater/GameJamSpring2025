@@ -180,7 +180,7 @@ Player init_player(ECS& ecs, Position& p_pos, Texture2D& gloveTex, Texture2D& ra
     rightId,
     2,
     10,
-    0.70,
+    0.2,
     0.95,
     200,
     next_gamepad_id++,

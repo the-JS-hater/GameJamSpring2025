@@ -1,4 +1,5 @@
 #include "../inc/ecs.hpp"
+#include <cstdio>
 
 Entity ECS::createEntity()
 {
@@ -78,8 +79,12 @@ void ECS::renderEntities()
 
 void ECS::resolveCollisions(vector<pair<Entity, Entity>> const& collisions) 
 {
+  if (!collisions.empty()) {
+    printf("--------------------------\n");
+  }
   for (const auto& [entityA, entityB] : collisions) 
   {
+    printf("A: %lu, B: %lu\n", entityA, entityB);
     Collider* colA = colliders.getComponent(entityA);
     Velocity* velA = velocities.getComponent(entityA);
 		Mass* massA = masses.getComponent(entityA);
@@ -89,6 +94,7 @@ void ECS::resolveCollisions(vector<pair<Entity, Entity>> const& collisions)
 		Mass* massB = masses.getComponent(entityB);
 																	 
     if (!colA || !velA || !massA || !colB || !velB || !massB) continue;
+
 
     Vector2 posA = { colA->rect.x, colA->rect.y };
     Vector2 posB = { colB->rect.x, colB->rect.y };
@@ -106,13 +112,17 @@ void ECS::resolveCollisions(vector<pair<Entity, Entity>> const& collisions)
 
     if (Vector2DotProduct(relVel, collisionNormal) >= 0.0f) continue; 
 
-    float massFactor = (2.0f * massB->v) / (massA->v + massB->v);
+    float massFactorA = (2.0f * massB->v) / (massA->v + massB->v);
+    float massFactorB = (2.0f * massA->v) / (massA->v + massB->v);
 
-    float impactSpeed = Vector2DotProduct(relVel, collisionNormal) * massFactor;
-    Vector2 velocityChange = Vector2Scale(collisionNormal, impactSpeed);
+    float impactSpeedA = Vector2DotProduct(relVel, collisionNormal) * massFactorA;
+    float impactSpeedB = Vector2DotProduct(relVel, collisionNormal) * massFactorB;
 
-    Vector2 velA_new = Vector2Subtract(velA_old, velocityChange);
-    Vector2 velB_new = Vector2Add(velB_old, velocityChange);
+    Vector2 velocityChangeA = Vector2Scale(collisionNormal, impactSpeedA);
+    Vector2 velocityChangeB = Vector2Scale(collisionNormal, impactSpeedB);
+
+    Vector2 velA_new = Vector2Subtract(velA_old, velocityChangeA);
+    Vector2 velB_new = Vector2Add(velB_old, velocityChangeB);
 
     velA->vx = velA_new.x;
     velA->vy = velA_new.y;
