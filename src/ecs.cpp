@@ -39,10 +39,15 @@ void ECS::updateVelocities()
 		vel->vy += acc->accY;
 
 		// Fortkörningsböter!
-		if (vel->vx > vel->max_v) vel->vx = vel->max_v;
-		if (vel->vy > vel->max_v) vel->vy = vel->max_v;
-		if (vel->vx < -vel->max_v) vel->vx = -vel->max_v;
-		if (vel->vy < -vel->max_v) vel->vy = -vel->max_v;
+		// if (vel->vx > vel->max_v) vel->vx = vel->max_v;
+		// if (vel->vy > vel->max_v) vel->vy = vel->max_v;
+		// if (vel->vx < -vel->max_v) vel->vx = -vel->max_v;
+		// if (vel->vy < -vel->max_v) vel->vy = -vel->max_v;
+		
+		if (vel->vx > vel->max_v) vel->vx *= retardingFactor;
+		if (vel->vy > vel->max_v) vel->vy *= retardingFactor;
+		if (vel->vx < -vel->max_v) vel->vx *= retardingFactor;
+		if (vel->vy < -vel->max_v) vel->vy *= retardingFactor;
 	}
 }
 
