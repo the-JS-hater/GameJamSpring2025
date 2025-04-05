@@ -259,14 +259,13 @@ void Player::respawn(ECS& ecs) {
   ecs.velocities.setComponent(this->body, vel);  
 
   pos.x += 32.0f;
-  ecs.positions.setComponent(this->left, pos);  
-  ecs.velocities.setComponent(this->left, vel);  
-
-  pos.x -= 64.0f;
   ecs.positions.setComponent(this->right, pos);  
   ecs.velocities.setComponent(this->right, vel);  
 
 	this->dashCooldown = 0;
+  pos.x -= 64.0f;
+  ecs.positions.setComponent(this->left, pos);  
+  ecs.velocities.setComponent(this->left, vel);  
 }
 
 void Player::draw_score(int player, int height) {

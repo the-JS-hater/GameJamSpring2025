@@ -6,6 +6,7 @@
 #include "../inc/utils.hpp"
 #include "../inc/hex.hpp"
 #include "../inc/audioManager.hpp"
+#include "../inc/victory_screen.hpp"
 #include <stdio.h>
 #include <cstdlib>
 
@@ -35,8 +36,9 @@ int main()
 
 	Player player_1 = init_player(ecs, pos_1, gloveTex, ratTex);
 	Player player_2 = init_player(ecs, pos_2, gloveTex2, ratTex2);
-		
-	ElectricHex hex(20.0f, 5.0f, 10.0f, 3.0f, 45.0f, 30.0f); 
+  VictoryScreen screen(WINDOW_W, WINDOW_H);
+  
+	ElectricHex hex(20.0f, 15.0f, 5.0f, 2.0f, 50.0f, 30.0f); 
 
   Rectangle worldBounds = {
     0, 0, 
@@ -45,10 +47,21 @@ int main()
   };
   Quadtree quadtree(worldBounds);
 
+  bool is_win = false;
+
   ToggleFullscreen();
 	SetTargetFPS(60);
 	while (!WindowShouldClose())
 	{
+    if (is_win) {
+      BeginDrawing();
+  	  ClearBackground(WHITE);
+      screen.print_screen(player_1, player_2);
+      screen.input(player_1, player_2, is_win);
+      EndDrawing();
+      continue;
+    }
+
 		/* UPDATE */
     player_1.input(ecs);
 		player_1.update(ecs);
@@ -62,7 +75,7 @@ int main()
   	auto vec = quadtree.getAllCollisions(ecs);
 
 		ecs.resolveCollisions(vec);
-		hex.checkHexBounds(ecs, player_1, player_2);
+		hex.checkHexBounds(ecs, player_1, player_2, is_win);
  		
 		/* RENDERING */
   	

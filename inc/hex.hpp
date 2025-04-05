@@ -29,5 +29,5 @@ struct ElectricHex
 
 	void resolveCollision(ECS& ecs, Entity id);
 
-	void checkHexBounds(ECS& ecs, Player&, Player&);
+	void checkHexBounds(ECS& ecs, Player&, Player&, bool&);
 };

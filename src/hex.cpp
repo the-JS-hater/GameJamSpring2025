@@ -104,7 +104,7 @@ void ElectricHex::resolveCollision(ECS& ecs, Entity id)
 	return;
 }
 
-void ElectricHex::checkHexBounds(ECS& ecs, Player& p_1, Player& p_2)
+void ElectricHex::checkHexBounds(ECS& ecs, Player& p_1, Player& p_2, bool& is_win)
 {
   for (Entity id = 0; id < ecs.nextEntity; ++id) 
 	{
@@ -112,10 +112,19 @@ void ElectricHex::checkHexBounds(ECS& ecs, Player& p_1, Player& p_2)
 		if (!collider) continue;
 		if (inBounds(collider->rect)) continue;
 
-    if (id == p_1.body) p_2.score++;
-    if (id == p_2.body) p_1.score++;
+    if (id == p_1.body)
+    {
+      p_2.score++;
+      is_win = true;
+    }
 
-    if (id == p_2.body || id == p_1.body) {
+    if (id == p_2.body)
+    {
+      p_1.score++;
+      is_win = true;
+    }
+
+    if (is_win) {
       p_1.respawn(ecs);
       p_2.respawn(ecs);
     }

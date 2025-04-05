@@ -10,7 +10,7 @@ LIBS=-lraylib
 _DEPS = 
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o sparseSet.o ecs.o quadtree.o player.o hex.o audioManager.o
+_OBJ = main.o sparseSet.o ecs.o quadtree.o player.o hex.o audioManager.o victory_screen.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 .PHONY $(ODIR):
