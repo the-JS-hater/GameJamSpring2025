@@ -4,6 +4,7 @@
 #include "../inc/player.hpp"
 #include "../inc/utils.hpp"
 #include "../inc/hex.hpp"
+#include "../inc/audioManager.hpp"
 #include <stdio.h>
 #include <cstdlib>
 
@@ -14,7 +15,10 @@ int main()
 {
 	SetTraceLogLevel(LOG_WARNING);
   InitWindow(WINDOW_W, WINDOW_H, "Game");
+	InitAudioDevice();                                     
 	srand(time(NULL));
+	initSmacks();
+
 	
 	ECS ecs; 
 
@@ -38,6 +42,7 @@ int main()
   };
   Quadtree quadtree(worldBounds);
 
+  //ToggleFullscreen();
 	SetTargetFPS(60);
 	while (!WindowShouldClose())
 	{
@@ -64,35 +69,6 @@ int main()
   	hex.draw();
 		player_1.drawArms(ecs);
 		player_2.drawArms(ecs);
-		  //
-		  // printf(
-		  //   "Player 1 (%lu %lu %lu)\n\tBody\n\t\t- mass: %f\n\t\t- acc: (%f, %f)\n\t\t- vel: (%f, %f)\n\tLeft\n\t\t- mass: %f\n\t\t- acc: (%f, %f)\n\t\t- vel: (%f, %f)\n\n\tRight\n\t\t- mass: %f\n\t\t- acc: (%f, %f)\n\t\t- vel: (%f, %f)\n",
-		  //   player_1.body, player_1.left, player_1.right,
-		  //   (*ecs.masses.getComponent(player_1.body)).v,
-		  //   (*ecs.accelerations.getComponent(player_1.body)).accX, (*ecs.accelerations.getComponent(player_1.body)).accY,
-		  //   (*ecs.velocities.getComponent(player_1.body)).vx, (*ecs.velocities.getComponent(player_1.body)).vy,
-		  //   (*ecs.masses.getComponent(player_1.left)).v,
-		  //   (*ecs.accelerations.getComponent(player_1.left)).accX, (*ecs.accelerations.getComponent(player_1.left)).accY,
-		  //   (*ecs.velocities.getComponent(player_1.left)).vx, (*ecs.velocities.getComponent(player_1.left)).vy,
-		  //   (*ecs.masses.getComponent(player_1.right)).v,
-		  //   (*ecs.accelerations.getComponent(player_1.right)).accX, (*ecs.accelerations.getComponent(player_1.right)).accY,
-		  //   (*ecs.velocities.getComponent(player_1.right)).vx, (*ecs.velocities.getComponent(player_1.right)).vy
-		  // );
-		  //
-		  // printf(
-		  //   "Player 2 (%lu %lu %lu)\n\tBody\n\t\t- mass: %f\n\t\t- acc: (%f, %f)\n\t\t- vel: (%f, %f)\n\tLeft\n\t\t- mass: %f\n\t\t- acc: (%f, %f)\n\t\t- vel: (%f, %f)\n\n\tRight\n\t\t- mass: %f\n\t\t- acc: (%f, %f)\n\t\t- vel: (%f, %f)\n",
-		  //   player_2.body, player_2.left, player_2.right,
-		  //   (*ecs.masses.getComponent(player_2.body)).v,
-		  //   (*ecs.accelerations.getComponent(player_2.body)).accX, (*ecs.accelerations.getComponent(player_2.body)).accY,
-		  //   (*ecs.velocities.getComponent(player_2.body)).vx, (*ecs.velocities.getComponent(player_2.body)).vy,
-		  //   (*ecs.masses.getComponent(player_2.left)).v,
-		  //   (*ecs.accelerations.getComponent(player_2.left)).accX, (*ecs.accelerations.getComponent(player_2.left)).accY,
-		  //   (*ecs.velocities.getComponent(player_2.left)).vx, (*ecs.velocities.getComponent(player_2.left)).vy,
-		  //   (*ecs.masses.getComponent(player_2.right)).v,
-		  //   (*ecs.accelerations.getComponent(player_2.right)).accX, (*ecs.accelerations.getComponent(player_2.right)).accY,
-		  //   (*ecs.velocities.getComponent(player_2.right)).vx, (*ecs.velocities.getComponent(player_2.right)).vy
-		  // );
-		  //
 		ecs.renderEntities();
 
 		drawCollisionDetection(vec, ecs);

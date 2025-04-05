@@ -3,6 +3,7 @@
 #include "sparseSet.hpp"
 #include "components.hpp"
 #include "entityType.hpp"
+#include "audioManager.hpp"
 #include <raylib.h>
 #include <raymath.h>
 #include <utility>
