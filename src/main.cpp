@@ -30,11 +30,13 @@ int main()
 	Texture2D ratTex = LoadTexture("resources/sprites/Rat.png");
 	Texture2D gloveTex2 = LoadTexture("resources/sprites/Glove2.png");
 	Texture2D ratTex2 = LoadTexture("resources/sprites/Rat2.png");
+	Texture2D crowd1 = LoadTexture("resources/sprites/Crowd1.png");
+	Texture2D crowd2 = LoadTexture("resources/sprites/Crowd2.png");
 
 	Player player_1 = init_player(ecs, pos_1, gloveTex, ratTex);
 	Player player_2 = init_player(ecs, pos_2, gloveTex2, ratTex2);
 		
-	ElectricHex hex(20.0f, 15.0f, 5.0f, 2.0f, 50.0f, 30.0f); 
+	ElectricHex hex(20.0f, 5.0f, 10.0f, 3.0f, 45.0f, 30.0f); 
 
   Rectangle worldBounds = {
     0, 0, 
@@ -43,7 +45,7 @@ int main()
   };
   Quadtree quadtree(worldBounds);
 
-  //ToggleFullscreen();
+  ToggleFullscreen();
 	SetTargetFPS(60);
 	while (!WindowShouldClose())
 	{
@@ -73,8 +75,26 @@ int main()
     player_1.draw_score(1, 20);
     player_2.draw_score(2, 50);
 		ecs.renderEntities();
+			
+		DrawTextureEx(
+			crowd1, 
+			{0.0f, GetScreenHeight() / 2 - crowd1.height}, 
+			0.0f, 
+			2.0f, 
+			WHITE
+		);
+		DrawTextureEx(
+			crowd2, 
+			{
+				GetScreenWidth() - 2.0f * crowd2.width, 
+				GetScreenHeight() / 2 - crowd2.height	
+			}, 
+			0.0f, 
+			2.0f, 
+			WHITE
+		);
 
-		drawCollisionDetection(vec, ecs);
+		//drawCollisionDetection(vec, ecs);
 
 		EndDrawing();
 	}
