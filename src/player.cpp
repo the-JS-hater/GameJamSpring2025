@@ -7,35 +7,35 @@
 
 void Player::input(ECS &ecs)
 {
-  Velocity b_v {0, 0};
-  Velocity h_l_v = (*ecs.velocities.getComponent(this->hand_l));
-  Velocity h_r_v = (*ecs.velocities.getComponent(this->hand_r));
+  Acceleration b_a {0, 0};
+  Acceleration h_l_a = (*ecs.accelerations.getComponent(this->hand_l));
+  Acceleration h_r_a = (*ecs.accelerations.getComponent(this->hand_r));
 
   if (IsKeyDown(KEY_SPACE)) this->using_left = !this->using_left;
 
-  if (IsKeyDown(KEY_UP)) b_v.vy = -2.0f;
-  if (IsKeyDown(KEY_LEFT)) b_v.vx = -2.0f;
-  if (IsKeyDown(KEY_DOWN)) b_v.vy = 2.0f;
-  if (IsKeyDown(KEY_RIGHT)) b_v.vx = 2.0f;
+  if (IsKeyDown(KEY_UP)) b_a.accY = -this->body_acc;
+  if (IsKeyDown(KEY_LEFT)) b_a.accX = -this->body_acc;
+  if (IsKeyDown(KEY_DOWN)) b_a.accY = this->body_acc;
+  if (IsKeyDown(KEY_RIGHT)) b_a.accX = this->body_acc;
 
   if (this->using_left)
   {
-    if (IsKeyDown(KEY_W)) h_l_v.vy -= 1.0f;
-    if (IsKeyDown(KEY_A)) h_l_v.vx -= 1.0f;
-    if (IsKeyDown(KEY_S)) h_l_v.vy += 1.0f;
-    if (IsKeyDown(KEY_D)) h_l_v.vx += 1.0f;
+    if (IsKeyDown(KEY_W)) h_l_a.accY = -this->hand_acc;
+    if (IsKeyDown(KEY_A)) h_l_a.accX = -this->hand_acc;
+    if (IsKeyDown(KEY_S)) h_l_a.accY = this->hand_acc;
+    if (IsKeyDown(KEY_D)) h_l_a.accX = this->hand_acc;
   }
   else 
   {
-    if (IsKeyDown(KEY_W)) h_r_v.vy -= 1.0f;
-    if (IsKeyDown(KEY_A)) h_r_v.vx -= 1.0f;
-    if (IsKeyDown(KEY_S)) h_r_v.vy += 1.0f;
-    if (IsKeyDown(KEY_D)) h_r_v.vx += 1.0f;
+    if (IsKeyDown(KEY_W)) h_r_a.accY = -this->hand_acc;
+    if (IsKeyDown(KEY_A)) h_r_a.accX = -this->hand_acc;
+    if (IsKeyDown(KEY_S)) h_r_a.accY = this->hand_acc;
+    if (IsKeyDown(KEY_D)) h_r_a.accX = this->hand_acc;
   }
 
-  ecs.velocities.setComponent(this->body, b_v);
-  ecs.velocities.setComponent(this->hand_l, h_l_v);
-  ecs.velocities.setComponent(this->hand_r, h_r_v);
+  ecs.accelerations.setComponent(this->body, b_a);
+  ecs.accelerations.setComponent(this->hand_l, h_l_a);
+  ecs.accelerations.setComponent(this->hand_r, h_r_a);
 }
 
 void Player::update(ECS& ecs)
@@ -57,7 +57,7 @@ void Player::update(ECS& ecs)
 
     // printf("Right pos: (%f, %f)\n\t- %f\n", new_pos.x, new_pos.y, h_l_dis);
 
-    double angle = atan2(h_l_pos.y - b_pos.y, h_l_pos.x - b_pos.x);
+    // double angle = atan2(h_l_pos.y - b_pos.y, h_l_pos.x - b_pos.x);
 
     ecs.positions.setComponent(this->hand_l, new_pos);
   }
@@ -72,7 +72,7 @@ void Player::update(ECS& ecs)
 
     // printf("Right pos: (%f, %f)\n\t- %f\n", new_pos.x, new_pos.y, h_l_dis);
 
-    double angle = atan2(h_r_pos.y - b_pos.y, h_r_pos.x - b_pos.x);
+    // double angle = atan2(h_r_pos.y - b_pos.y, h_r_pos.x - b_pos.x);
     ecs.positions.setComponent(this->hand_r, new_pos);
   }
 }
@@ -92,12 +92,14 @@ Player init_player(ECS& ecs) {
   };
 
   Velocity vel = { 0.0f, 0.0f };
+  Acceleration acc = { 0.0f, 0.0f };
   Dimension dim = { 32.0f, 32.0f };
   Collider collider;
   collider.update(b_pos, dim);
 
   ecs.positions.insert(body, b_pos);
   ecs.velocities.insert(body, vel);
+  ecs.accelerations.insert(body, acc);
   ecs.dimensions.insert(body, dim);
   ecs.colliders.insert(body, collider);
   ecs.sprites.insert(body, Sprite{body_tex});
@@ -110,12 +112,14 @@ Player init_player(ECS& ecs) {
     };
 
     Velocity vel = { 0.0f, 0.0f };
+    Acceleration acc = { 0.0f, 0.0f };
     Dimension dim = { 32.0f, 32.0f };
     Collider collider;
     collider.update(pos, dim);
 
     ecs.positions.insert(hand_l, pos);
     ecs.velocities.insert(hand_l, vel);
+    ecs.accelerations.insert(hand_l, acc);
     ecs.dimensions.insert(hand_l, dim);
     ecs.colliders.insert(hand_l, collider);
     ecs.sprites.insert(hand_l, Sprite{hand_l_tex});
@@ -130,17 +134,27 @@ Player init_player(ECS& ecs) {
     };
 
     Velocity vel = { 0.0f, 0.0f };
+    Acceleration acc = { 0.0f, 0.0f };
     Dimension dim = { 32.0f, 32.0f };
     Collider collider;
     collider.update(pos, dim);
 
     ecs.positions.insert(hand_r, pos);
     ecs.velocities.insert(hand_r, vel);
+    ecs.accelerations.insert(hand_r, acc);
     ecs.dimensions.insert(hand_r, dim);
     ecs.colliders.insert(hand_r, collider);
     ecs.sprites.insert(hand_r, Sprite{hand_r_tex});
   }
 
-  return Player{ body, hand_l, hand_r, 3, 200, false, true };
+  return Player{
+    body,
+    hand_l,
+    hand_r,
+    1,
+    2,
+    200,
+    true,
+  };
 }
 

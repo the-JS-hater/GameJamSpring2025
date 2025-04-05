@@ -13,11 +13,10 @@ struct Player
 	Entity hand_l;
 	Entity hand_r;
 
-  double acc;
-  size_t max_v;
-  size_t max_d;
+  float body_acc;
+  float hand_acc;
+  float max_d;
 
-  bool is_moving;
   bool using_left;
 
   void input(ECS& ecs);

@@ -36,6 +36,7 @@ int main()
     player.input(ecs);
 		player.update(ecs);
   	ecs.updateMovement();
+    ecs.updateVelocities();
   	quadtree.update(ecs);
   	auto vec = quadtree.getAllCollisions(ecs);
 		ecs.resolveCollisions(vec);
