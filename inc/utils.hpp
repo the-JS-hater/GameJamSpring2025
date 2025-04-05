@@ -21,6 +21,10 @@ void genTestEntities(ECS& ecs, size_t count)
 			32.0f,
 			32.0f
 		};
+
+		Mass mass = {
+			1000.0f
+		};
     
 		Collider collider;
     collider.update(pos, dim);
@@ -29,7 +33,7 @@ void genTestEntities(ECS& ecs, size_t count)
     ecs.velocities.insert(entity, vel);
     ecs.dimensions.insert(entity, dim);
     ecs.colliders.insert(entity, collider);
-		
+		ecs.masses.insert(entity, mass);
 		//CollisionCallback testCallback([&ecs](Entity this_id, Entity other_id){
 		//	ecs.destroyEntity(other_id);
 		//});

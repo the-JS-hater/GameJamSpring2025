@@ -21,6 +21,11 @@ struct Dimension
 	float w, h;
 };
 
+struct Mass
+{
+	float v;
+};
+
 struct Collider {
   Rectangle rect; 
 

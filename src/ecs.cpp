@@ -53,13 +53,15 @@ void ECS::resolveCollisions(vector<pair<Entity, Entity>> const& collisions)
   {
     Collider* colA = colliders.getComponent(entityA);
     Velocity* velA = velocities.getComponent(entityA);
+		Mass* massA = masses.getComponent(entityA);
     CollisionCallback* callbackA = collisionCallbacks.getComponent(entityA);
 
     Collider* colB = colliders.getComponent(entityB);
     Velocity* velB = velocities.getComponent(entityB);
+		Mass* massB = masses.getComponent(entityB);
     CollisionCallback* callbackB = collisionCallbacks.getComponent(entityB);
 																	 
-    if (!colA || !velA || !colB || !velB) continue;
+    if (!colA || !velA || !massA || !colB || !velB || !massB) continue;
 
     Vector2 posA = { colA->rect.x, colA->rect.y };
     Vector2 posB = { colB->rect.x, colB->rect.y };
@@ -77,9 +79,7 @@ void ECS::resolveCollisions(vector<pair<Entity, Entity>> const& collisions)
 
     if (Vector2DotProduct(relVel, collisionNormal) >= 0.0f) continue; 
 
-    // TODO: add mass component later
-    float massA = 1.0f, massB = 1.0f;
-    float massFactor = (2.0f * massB) / (massA + massB);
+    float massFactor = (2.0f * massB->v) / (massA->v + massB->v);
 
     float impactSpeed = Vector2DotProduct(relVel, collisionNormal) * massFactor;
     Vector2 velocityChange = Vector2Scale(collisionNormal, impactSpeed);

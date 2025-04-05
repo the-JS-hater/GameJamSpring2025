@@ -4,6 +4,7 @@
 #include <memory>
 #include <iterator>
 #include <raylib.h>
+#include "../inc/ecs.hpp"
 
 struct Triangle
 {
@@ -27,4 +28,6 @@ struct ElectricHex
 	void draw();
 
 	bool inBounds(Rectangle aabb);
+
+	void resolveCollision(ECS& ecs, Entity id);
 };

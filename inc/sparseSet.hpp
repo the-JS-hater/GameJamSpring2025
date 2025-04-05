@@ -31,3 +31,4 @@ template struct SparseSet<Dimension>;
 template struct SparseSet<Collider>;
 template struct SparseSet<CollisionCallback>;
 template struct SparseSet<Sprite>;
+template struct SparseSet<Mass>;

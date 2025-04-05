@@ -19,6 +19,7 @@ struct ECS
   SparseSet<Collider> colliders;
   SparseSet<CollisionCallback> collisionCallbacks;
 	SparseSet<Sprite> sprites;
+	SparseSet<Mass> masses;
 
   Entity createEntity();
 

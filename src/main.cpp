@@ -20,7 +20,7 @@ int main()
 		
 	ElectricHex hex(20.0f, 15.0f, 5.0f, 2.0f, 50.0f, 30.0f); 
 
-	genTestEntities(ecs, 100);
+	//genTestEntities(ecs, 100);
 
   Rectangle worldBounds = {
     0, 0, 
@@ -29,13 +29,14 @@ int main()
   };
   Quadtree quadtree(worldBounds);
 	
-
+	genTestEntities(ecs, 10);
 
 	SetTargetFPS(60);
 	while (!WindowShouldClose())
 	{
 		/* UPDATE */
     player.input(ecs);
+		player.update(ecs);
   	ecs.updateMovement();
   	quadtree.update(ecs);
   	auto vec = quadtree.getAllCollisions(ecs);
