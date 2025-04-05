@@ -46,3 +46,14 @@ void genTestEntities(ECS& ecs, size_t count)
 	}
 }
 
+void drawCollisionDetection(vector<pair<Entity, Entity>> vec, ECS& ecs)
+{
+	for (auto [e1, e2] : vec)
+	{
+		auto box1 = ecs.colliders.getComponent(e1)->rect;
+		auto box2 = ecs.colliders.getComponent(e2)->rect;
+
+		DrawRectangleRec(box1, PINK);
+		DrawRectangleRec(box2, PINK);
+	}
+}

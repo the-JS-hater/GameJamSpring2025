@@ -94,6 +94,7 @@ int main()
 
 		ecs.renderEntities();
 
+		drawCollisionDetection(vec, ecs);
 
 		EndDrawing();
 	}
