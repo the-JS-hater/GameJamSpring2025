@@ -11,26 +11,64 @@ void Player::input(ECS &ecs)
   Acceleration h_l_a = {0, 0};
   Acceleration h_r_a = {0, 0};
 
-  if (IsKeyDown(KEY_SPACE)) this->using_left = !this->using_left;
+  if (IsGamepadAvailable(this->gamepad_id)) {
+    const float leftStickDeadzoneX = 0.1f;
+    const float leftStickDeadzoneY = 0.1f;
+    const float rightStickDeadzoneX = 0.1f;
+    const float rightStickDeadzoneY = 0.1f;
 
-  if (IsKeyDown(KEY_UP)) b_a.accY = -this->body_acc;
-  if (IsKeyDown(KEY_LEFT)) b_a.accX = -this->body_acc;
-  if (IsKeyDown(KEY_DOWN)) b_a.accY = this->body_acc;
-  if (IsKeyDown(KEY_RIGHT)) b_a.accX = this->body_acc;
+    float leftStickX = GetGamepadAxisMovement(gamepad_id, GAMEPAD_AXIS_LEFT_X);
+    float leftStickY = GetGamepadAxisMovement(gamepad_id, GAMEPAD_AXIS_LEFT_Y);
+    float rightStickX = GetGamepadAxisMovement(gamepad_id, GAMEPAD_AXIS_RIGHT_X);
+    float rightStickY = GetGamepadAxisMovement(gamepad_id, GAMEPAD_AXIS_RIGHT_Y);
+    float leftTrigger = GetGamepadAxisMovement(gamepad_id, GAMEPAD_AXIS_LEFT_TRIGGER);
+    float rightTrigger = GetGamepadAxisMovement(gamepad_id, GAMEPAD_AXIS_RIGHT_TRIGGER);
+    
+    bool rightDownButton = IsGamepadButtonDown(gamepad_id, GAMEPAD_BUTTON_RIGHT_FACE_DOWN);
+    
+    if (leftStickX > -leftStickDeadzoneX && leftStickX < leftStickDeadzoneX) leftStickX = 0.0f;
+    if (leftStickY > -leftStickDeadzoneY && leftStickY < leftStickDeadzoneY) leftStickY = 0.0f;
+    if (rightStickX > -rightStickDeadzoneX && rightStickX < rightStickDeadzoneX) rightStickX = 0.0f;
+    if (rightStickY > -rightStickDeadzoneY && rightStickY < rightStickDeadzoneY) rightStickY = 0.0f;
 
-  if (this->using_left)
-  {
-    if (IsKeyDown(KEY_W)) h_l_a.accY = -this->hand_acc;
-    if (IsKeyDown(KEY_A)) h_l_a.accX = -this->hand_acc;
-    if (IsKeyDown(KEY_S)) h_l_a.accY = this->hand_acc;
-    if (IsKeyDown(KEY_D)) h_l_a.accX = this->hand_acc;
+    b_a.accX=leftStickX * this->body_acc;
+    b_a.accY=leftStickY * this->body_acc;
+   
+    if (rightDownButton) this->using_left = !this->using_left;
+
+    if (this->using_left) {
+      h_l_a.accX=rightStickX * this->hand_acc;
+      h_l_a.accY=rightStickY * this->hand_acc;
+    }
+    else
+    {
+      h_r_a.accX=rightStickX * this->hand_acc;
+      h_r_a.accY=rightStickY * this->hand_acc;
+    }
   }
-  else 
+  else
   {
-    if (IsKeyDown(KEY_W)) h_r_a.accY = -this->hand_acc;
-    if (IsKeyDown(KEY_A)) h_r_a.accX = -this->hand_acc;
-    if (IsKeyDown(KEY_S)) h_r_a.accY = this->hand_acc;
-    if (IsKeyDown(KEY_D)) h_r_a.accX = this->hand_acc;
+    if (IsKeyDown(KEY_SPACE)) this->using_left = !this->using_left;
+
+    if (IsKeyDown(KEY_UP)) b_a.accY = -this->body_acc;
+    if (IsKeyDown(KEY_LEFT)) b_a.accX = -this->body_acc;
+    if (IsKeyDown(KEY_DOWN)) b_a.accY = this->body_acc;
+    if (IsKeyDown(KEY_RIGHT)) b_a.accX = this->body_acc;
+
+    if (this->using_left)
+    {
+      if (IsKeyDown(KEY_W)) h_l_a.accY = -this->hand_acc;
+      if (IsKeyDown(KEY_A)) h_l_a.accX = -this->hand_acc;
+      if (IsKeyDown(KEY_S)) h_l_a.accY = this->hand_acc;
+      if (IsKeyDown(KEY_D)) h_l_a.accX = this->hand_acc;
+    }
+    else 
+    {
+      if (IsKeyDown(KEY_W)) h_r_a.accY = -this->hand_acc;
+      if (IsKeyDown(KEY_A)) h_r_a.accX = -this->hand_acc;
+      if (IsKeyDown(KEY_S)) h_r_a.accY = this->hand_acc;
+      if (IsKeyDown(KEY_D)) h_r_a.accX = this->hand_acc;
+    }
   }
 
   ecs.accelerations.setComponent(this->body, b_a);
@@ -140,6 +178,7 @@ Player init_player(ECS& ecs) {
     ecs.sprites.insert(hand_r, Sprite{hand_r_tex});
   }
 
+	static int next_gamepad_id{};
   return Player{
     body,
     hand_l,
@@ -147,6 +186,7 @@ Player init_player(ECS& ecs) {
     4,
     2,
     200,
+    next_gamepad_id++,
     true,
   };
 }

@@ -17,6 +17,8 @@ struct Player
   float hand_acc;
   float max_d;
 
+	int gamepad_id;
+
   bool using_left;
 
   void input(ECS& ecs);
