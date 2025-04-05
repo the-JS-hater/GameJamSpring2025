@@ -122,7 +122,7 @@ Player init_player(ECS& ecs)
 			static_cast<float>(GetScreenWidth() / 2),
 			static_cast<float>(GetScreenHeight() / 2)	
 		};
-  	Velocity vel = { 0.0f, 0.0f };
+  	Velocity vel = { 0.0f, 0.0f, 2.0f };
   	Acceleration acc = { 0.0f, 0.0f };
   	Dimension dim = { 32.0f, 64.0f };
 		Mass mass = { 1000.0f };
@@ -144,7 +144,7 @@ Player init_player(ECS& ecs)
 			static_cast<float>(GetScreenWidth() / 2) - 32.0f,
 			static_cast<float>(GetScreenHeight() / 2)	
 		};
-  	Velocity vel = { 0.0f, 0.0f };
+  	Velocity vel = { 0.0f, 0.0f, 4.0f };
   	Acceleration acc = { 0.0f, 0.0f };
   	Dimension dim = { 32.0f, 32.0f };
 		Mass mass = { 250.0f };
@@ -167,7 +167,7 @@ Player init_player(ECS& ecs)
 			static_cast<float>(GetScreenWidth() / 2) + 32.0f,
 			static_cast<float>(GetScreenHeight() / 2)	
 		};
-  	Velocity vel = { 0.0f, 0.0f };
+  	Velocity vel = { 0.0f, 0.0f, 5.0f };
   	Acceleration acc = { 0.0f, 0.0f };
   	Dimension dim = { 32.0f, 32.0f };
 		Mass mass = { 250.0f };
