@@ -1,6 +1,9 @@
 #include "../inc/player.hpp"
 
 
+#define DASH_COOLDOWN 120
+
+
 void Player::gamepad_input(Acceleration& b, Acceleration& l, Acceleration& r) {
   const float leftStickDeadzoneX = 0.1f;
   const float leftStickDeadzoneY = 0.1f;
@@ -24,8 +27,9 @@ void Player::gamepad_input(Acceleration& b, Acceleration& l, Acceleration& r) {
   b.accX = leftStickX * this->body_acc;
   b.accY = leftStickY * this->body_acc;
 
-  if (buttonFour)
+  if (buttonFour and this->dashCooldown == 0)
   {
+		this->dashCooldown = DASH_COOLDOWN;
     b.accX *= 10;
     b.accY *= 10;
 		playRandomWoosh();
@@ -113,6 +117,8 @@ void Player::update(ECS& ecs)
 
     ecs.positions.setComponent(this->right, new_pos);
   }
+
+	if (this->dashCooldown > 0) this->dashCooldown--;
 }
 
 
@@ -191,12 +197,13 @@ Player init_player(ECS& ecs, Position& p_pos, Texture2D& gloveTex, Texture2D& ra
     bodyId,
     leftId,
     rightId,
-    2,          // body acc
-    15,         // hand acc
-    0.5,        // hand retard
-    0.95,       // body retard
-    200,        // hand max dist
-    0,          // score
+    2,          		// body acc
+    15,         		// hand acc
+		0,							// dash cooldown
+    0.5,        		// hand retard
+    0.95,       		// body retard
+    200,        		// hand max dist
+    0,          		// score
     p_pos,
     next_gamepad_id++,
     true,
@@ -216,6 +223,8 @@ void Player::respawn(ECS& ecs) {
   pos.x -= 64.0f;
   ecs.positions.setComponent(this->right, pos);  
   ecs.velocities.setComponent(this->right, vel);  
+
+	this->dashCooldown = 0;
 }
 
 void Player::draw_score(int player, int height) {

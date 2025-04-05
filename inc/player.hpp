@@ -20,6 +20,8 @@ struct Player
   float body_acc;
   float hand_acc;
 
+	int dashCooldown;
+
   float hand_retarding_factor;
   float body_retarding_factor;
   float max_d;
