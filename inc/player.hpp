@@ -30,5 +30,5 @@ struct Player
   void gamepad_input(ECS&, Acceleration&, Acceleration&, Acceleration&);
 };
 
-Player init_player(ECS &);
+Player init_player(ECS &, Position&);
 

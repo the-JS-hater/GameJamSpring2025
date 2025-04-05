@@ -103,7 +103,7 @@ void Player::update(ECS& ecs)
 }
 
 
-Player init_player(ECS& ecs) 
+Player init_player(ECS& ecs, Position& p_pos) 
 {
 	Texture2D gloveTex = LoadTexture("resources/sprites/Glove.png");
 	Texture2D ratTex = LoadTexture("resources/sprites/Rat.png");
@@ -114,10 +114,7 @@ Player init_player(ECS& ecs)
 
 	// Body
 	{
-		Position pos = {
-			static_cast<float>(GetScreenWidth() / 2.0f),
-			static_cast<float>(GetScreenHeight() / 2.0f)	
-		};
+		Position pos = p_pos;
   	Velocity vel = { 0.0f, 0.0f, 2.0f };
   	Acceleration acc = { 0.0f, 0.0f, 0.0f };
   	Dimension dim = { 32.0f, 64.0f };
@@ -137,8 +134,8 @@ Player init_player(ECS& ecs)
 	// Glove left 
 	{
 		Position pos = {
-			static_cast<float>(GetScreenWidth() / 2.0f) - 32.0f,
-			static_cast<float>(GetScreenHeight() / 2.0f)	
+			p_pos.x - 32.0f,
+      p_pos.y
 		};
   	Velocity vel = { 0.0f, 0.0f, 7.0f };
   	Acceleration acc = { 0.0f, 0.0f, 0.0f };
@@ -159,8 +156,8 @@ Player init_player(ECS& ecs)
 	// Glove right 
 	{
 		Position pos = {
-			static_cast<float>(GetScreenWidth() / 2.0f) + 32.0f,
-			static_cast<float>(GetScreenHeight() / 2.0f)	
+			p_pos.x + 32.0f,
+		  p_pos.y	
 		};
   	Velocity vel = { 0.0f, 0.0f, 7.0f };
   	Acceleration acc = { 0.0f, 0.0f, 0.0f };
@@ -184,8 +181,8 @@ Player init_player(ECS& ecs)
     bodyId,
     leftId,
     rightId,
-    3,
     2,
+    10,
     0.70,
     0.95,
     200,

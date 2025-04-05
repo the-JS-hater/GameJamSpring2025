@@ -17,8 +17,11 @@ int main()
 	srand(time(NULL));
 	
 	ECS ecs; 
-	Player player_1 = init_player(ecs);
-	Player player_2 = init_player(ecs);
+
+  Position pos_1 {static_cast<float>(WINDOW_W)/2.0f, static_cast<float>(WINDOW_H)/4.0f,};
+  Position pos_2 {pos_1.x, pos_1.y * 3};
+	Player player_1 = init_player(ecs, pos_1);
+	Player player_2 = init_player(ecs, pos_2);
 		
 	ElectricHex hex(20.0f, 15.0f, 5.0f, 2.0f, 50.0f, 30.0f); 
 
@@ -29,13 +32,14 @@ int main()
   };
   Quadtree quadtree(worldBounds);
 
+  // ToggleFullscreen();
 	SetTargetFPS(60);
 	while (!WindowShouldClose())
 	{
 		/* UPDATE */
     player_1.input(ecs);
-    player_2.input(ecs);
 		player_1.update(ecs);
+    player_2.input(ecs);
 		player_2.update(ecs);
 
     ecs.updateVelocities();
@@ -55,6 +59,7 @@ int main()
   	hex.draw();
 		player_1.drawArms(ecs);
 		player_2.drawArms(ecs);
+
 		ecs.renderEntities();
 
 
