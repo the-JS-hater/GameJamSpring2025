@@ -42,3 +42,4 @@ void genTestEntities(ECS& ecs, size_t count)
 		ecs.sprites.insert(entity, Sprite{tex});
 	}
 }
+

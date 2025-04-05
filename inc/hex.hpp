@@ -30,4 +30,6 @@ struct ElectricHex
 	bool inBounds(Rectangle aabb);
 
 	void resolveCollision(ECS& ecs, Entity id);
+
+	void checkHexBounds(ECS& ecs);
 };
