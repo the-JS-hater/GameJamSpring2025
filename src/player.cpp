@@ -92,14 +92,8 @@ void Player::update(ECS& ecs)
 
   if (h_l_dis > this->max_d) {
 
-    };
 
-    Velocity actual = {
-      (float) sqrt(pow(along.vx, 2) + pow(out.vx, 2)),
-      (float) sqrt(pow(along.vy, 2) + pow(out.vy, 2)),
-    };
 
-    printf("actual x: %f\nactual y: %f\n", actual.vx, actual.vy);
   }
 
   // printf("Left angle: %f\n", angle_l);

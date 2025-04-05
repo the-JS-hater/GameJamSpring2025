@@ -10,7 +10,6 @@
 #define WINDOW_W 1280
 #define WINDOW_H 720 
 	
-
 int main()
 {
 	SetTraceLogLevel(LOG_WARNING);
@@ -37,6 +36,8 @@ int main()
 		/* UPDATE */
     player.input(ecs);
 		player.update(ecs);
+
+    game_pad();
 
     ecs.updateVelocities();
   	ecs.updateMovement();
