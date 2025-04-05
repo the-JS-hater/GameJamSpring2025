@@ -60,6 +60,21 @@ int main()
 		player_1.drawArms(ecs);
 		player_2.drawArms(ecs);
 
+    printf(
+      "Player 1\n\t- mass: %f\n\t- acc: (%f, %f)\n\t- vel: (%f, %f)\n",
+      (*ecs.masses.getComponent(player_1.left)).v,
+      (*ecs.accelerations.getComponent(player_1.left)).accX, (*ecs.accelerations.getComponent(player_1.left)).accY,
+      (*ecs.velocities.getComponent(player_1.left)).vx, (*ecs.velocities.getComponent(player_1.left)).vy
+    );
+
+    printf(
+      "Player 2\n\t- mass: %f\n\t- acc: (%f, %f)\n\t- vel: (%f, %f)\n",
+      (*ecs.masses.getComponent(player_2.left)).v,
+      (*ecs.accelerations.getComponent(player_2.left)).accX, (*ecs.accelerations.getComponent(player_2.left)).accY,
+      (*ecs.velocities.getComponent(player_2.left)).vx, (*ecs.velocities.getComponent(player_2.left)).vy
+    );
+
+
 		ecs.renderEntities();
 
 
