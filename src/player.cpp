@@ -80,36 +80,49 @@ void Player::input(ECS &ecs)
 
 void Player::update(ECS& ecs)
 {
-  Rectangle b_bounds = ecs.colliders.getComponent(this->body)->rect;
-  Rectangle h_l_bounds = ecs.colliders.getComponent(this->left)->rect;
-  Rectangle h_r_bounds = ecs.colliders.getComponent(this->right)->rect;
-
-  Velocity b_v = *ecs.velocities.getComponent(this->body);
-  Velocity h_l_v = *ecs.velocities.getComponent(this->body);
-  Velocity h_r_v = *ecs.velocities.getComponent(this->body);
-
-  Vector2 b_mid{b_bounds.x + b_bounds.width/2, b_bounds.y + b_bounds.height/2};
-  Vector2 h_l_mid{h_l_bounds.x + h_l_bounds.width/2, h_l_bounds.y + h_l_bounds.height/2};
-  Vector2 h_r_mid{h_r_bounds.x + h_r_bounds.width/2, h_r_bounds.y + h_r_bounds.height/2};
-
-//  float h_l_dis = (float) sqrt(pow(h_l_pos.x - b_pos.x, 2) + pow(h_l_pos.y - b_pos.y, 2)); 
-//  float h_r_dis = (float) sqrt(pow(h_r_pos.x - b_pos.x, 2) + pow(h_r_pos.y - b_pos.y, 2)); 
-
-//  float angle_l = atan2(h_l_pos.y - b_pos.y, h_l_pos.x - b_pos.x);
-//  float angle_r = atan2(h_r_pos.y - b_pos.y, h_r_pos.x - b_pos.x);
-
-  Velocity net_v{};
-
-  if (!CheckCollisionPointCircle(h_l_mid, b_mid, this->max_d)) {
-    std::cout << "Lul left" << std::endl;
-  }
-
-  if (!CheckCollisionPointCircle(h_r_mid, b_mid, this->max_d)) {
-    std::cout << "Lul right" << std::endl;
-  }
-
-  // printf("Left angle: %f\n", angle_l);
-  // printf("Right angle: %f\n", angle_r);
+//  Rectangle b_bounds = ecs.colliders.getComponent(this->body)->rect;
+//  Rectangle h_l_bounds = ecs.colliders.getComponent(this->left)->rect;
+//  Rectangle h_r_bounds = ecs.colliders.getComponent(this->right)->rect;
+//
+//  Velocity b_v = *ecs.velocities.getComponent(this->body);
+//  Velocity h_l_v = *ecs.velocities.getComponent(this->body);
+//  Velocity h_r_v = *ecs.velocities.getComponent(this->body);
+//
+//  Vector2 b_mid{b_bounds.x + b_bounds.width/2, b_bounds.y + b_bounds.height/2};
+//  Vector2 h_l_mid{h_l_bounds.x + h_l_bounds.width/2, h_l_bounds.y + h_l_bounds.height/2};
+//  Vector2 h_r_mid{h_r_bounds.x + h_r_bounds.width/2, h_r_bounds.y + h_r_bounds.height/2};
+//
+//  float angle_l = atan2(h_l_mid.y - b_mid.y, h_l_mid.x - b_mid.x);
+//  float angle_r = atan2(h_r_mid.y - b_mid.y, h_r_mid.x - b_mid.x);
+//  Vector2 n{ cos(angle_l), sin(angle_l)};
+//  Vector2 t{-sin(angle_l), cos(angle_l)};
+//
+//  Acceleration zero{0.f,0.f};
+//  if (!CheckCollisionPointCircle(h_l_mid, b_mid, this->max_d)) {
+//    b_v.vx += n.x * h_l_v.vx + n.y * h_l_v.vy;
+//    b_v.vy += n.x * h_l_v.vx + n.y * h_l_v.vy;
+//    
+//    float h_l_v_mag = h_l_v.vx * n.x + h_l_v.vy * n.y; 
+//    Velocity h_l_v_new{h_l_v_mag * t.x, h_l_v_mag * t.y};
+//    ecs.velocities.setComponent(this->left, h_l_v_new);
+//    ecs.accelerations.setComponent(this->left, zero);
+//  }
+//
+//  if (!CheckCollisionPointCircle(h_r_mid, b_mid, this->max_d)) {
+//    b_v.vx += n.x * h_r_v.vx + n.y * h_r_v.vy;
+//    b_v.vy += n.x * h_r_v.vx + n.y * h_r_v.vy;
+//    
+//    float h_r_v_mag = h_r_v.vx * h_r_v.vx + h_r_v.vy * h_r_v.vy;
+//    Velocity h_r_v_new{h_r_v_mag * t.x, h_r_v_mag * t.y};
+//    ecs.velocities.setComponent(this->right, h_r_v_new);
+//    ecs.accelerations.setComponent(this->right, zero);
+//  }
+//  
+//  ecs.velocities.setComponent(this->body, b_v);
+//
+//  
+//  // printf("Left angle: %f\n", angle_l);
+//  // printf("Right angle: %f\n", angle_r);
 }
 
 
