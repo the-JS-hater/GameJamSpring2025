@@ -69,6 +69,7 @@ void Player::gamepad_input(Acceleration& b, Acceleration& l, Acceleration& r) {
       r.accX = rightStickX * this->hand_acc;
     }
   }
+
 }
 
 void Player::input(ECS &ecs)
@@ -81,29 +82,7 @@ void Player::input(ECS &ecs)
   {
     gamepad_input(b_a, h_l_a, h_r_a);
   }
-  else
-  { if (IsKeyDown(KEY_SPACE)) this->using_left = !this->using_left;
-
-    if (IsKeyDown(KEY_UP)) b_a.accY = -this->body_acc;
-    if (IsKeyDown(KEY_LEFT)) b_a.accX = -this->body_acc;
-    if (IsKeyDown(KEY_DOWN)) b_a.accY = this->body_acc;
-    if (IsKeyDown(KEY_RIGHT)) b_a.accX = this->body_acc;
-
-    if (this->using_left)
-    {
-      if (IsKeyDown(KEY_W)) h_l_a.accY = -this->hand_acc;
-      if (IsKeyDown(KEY_A)) h_l_a.accX = -this->hand_acc;
-      if (IsKeyDown(KEY_S)) h_l_a.accY = this->hand_acc;
-      if (IsKeyDown(KEY_D)) h_l_a.accX = this->hand_acc;
-    }
-    else 
-    {
-      if (IsKeyDown(KEY_W)) h_r_a.accY = -this->hand_acc;
-      if (IsKeyDown(KEY_A)) h_r_a.accX = -this->hand_acc;
-      if (IsKeyDown(KEY_S)) h_r_a.accY = this->hand_acc;
-      if (IsKeyDown(KEY_D)) h_r_a.accX = this->hand_acc;
-    }
-  }
+  
   ecs.accelerations.setComponent(this->body, b_a);
   ecs.accelerations.setComponent(this->left, h_l_a);
   ecs.accelerations.setComponent(this->right, h_r_a);
@@ -194,6 +173,20 @@ void Player::update(ECS& ecs)
   }
 
 	if (this->dashCooldown > 0) this->dashCooldown--;
+
+  Acceleration b_acc = (*ecs.accelerations.getComponent(this->body));
+  Acceleration l_acc {
+    (*ecs.accelerations.getComponent(this->left)).accX + b_acc.accX,
+    (*ecs.accelerations.getComponent(this->left)).accY + b_acc.accY
+  };
+  Acceleration r_acc {
+    (*ecs.accelerations.getComponent(this->right)).accX + b_acc.accX,
+    (*ecs.accelerations.getComponent(this->right)).accY + b_acc.accY
+  };
+
+  ecs.accelerations.setComponent(this->left, l_acc);
+  ecs.accelerations.setComponent(this->right, r_acc);
+
 }
 
 
@@ -294,12 +287,12 @@ void Player::respawn(ECS& ecs) {
   ecs.positions.setComponent(this->body, pos);  
   ecs.velocities.setComponent(this->body, vel);  
 
-  pos.x += 32.0f;
+  pos.x += 40.0f;
   ecs.positions.setComponent(this->right, pos);  
   ecs.velocities.setComponent(this->right, vel);  
 
 	this->dashCooldown = 0;
-  pos.x -= 64.0f;
+  pos.x -= 80.0f;
   ecs.positions.setComponent(this->left, pos);  
   ecs.velocities.setComponent(this->left, vel);  
 }

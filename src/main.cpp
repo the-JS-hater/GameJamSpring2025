@@ -50,6 +50,10 @@ int main()
 
   //ToggleFullscreen();
 	SetTargetFPS(60);
+
+  player_1.respawn(ecs);
+  player_2.respawn(ecs);
+
 	while (!WindowShouldClose())
 	{
     if (is_win) {
