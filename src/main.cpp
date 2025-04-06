@@ -48,7 +48,7 @@ int main()
 
   bool is_win = false;
 
-  //ToggleFullscreen();
+  ToggleFullscreen();
 	SetTargetFPS(60);
 
   player_1.respawn(ecs);

@@ -154,7 +154,7 @@ void ECS::spawnBlood(Entity id)
 	Position* pos = this->positions.getComponent(id);
 
 	Entity bloodId = this->createEntity();
-	Lifetime lifetime { 600 };
+	Lifetime lifetime { 30 };
 	Sprite sprite { bloodTex };
 	Position posCopy {pos->x, pos->y};
 	

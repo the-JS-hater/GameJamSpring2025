@@ -14,6 +14,12 @@ void Player::gamepad_input(Acceleration& b, Acceleration& l, Acceleration& r) {
   const float rightStickDeadzoneX = 0.1f;
   const float rightStickDeadzoneY = 0.1f;
 
+  const float leftStickDeadzoneHandX = 0.3f;
+  const float leftStickDeadzoneHandY = 0.3f;
+  const float rightStickDeadzoneHandX = 0.3f;
+  const float rightStickDeadzoneHandY = 0.3f;
+
+
   float leftStickX = GetGamepadAxisMovement(gamepad_id, GAMEPAD_AXIS_LEFT_X);
   float leftStickY = GetGamepadAxisMovement(gamepad_id, GAMEPAD_AXIS_LEFT_Y);
   float rightStickX = GetGamepadAxisMovement(gamepad_id, GAMEPAD_AXIS_RIGHT_X);
@@ -39,6 +45,10 @@ void Player::gamepad_input(Acceleration& b, Acceleration& l, Acceleration& r) {
 		playRandomWoosh();
   }
 
+  if (leftStickX > -leftStickDeadzoneHandX && leftStickX < leftStickDeadzoneHandX) leftStickX = 0.0f;
+  if (leftStickY > -leftStickDeadzoneHandY && leftStickY < leftStickDeadzoneHandY) leftStickY = 0.0f;
+  if (rightStickX > -rightStickDeadzoneHandX && rightStickX < rightStickDeadzoneHandX) rightStickX = 0.0f;
+  if (rightStickY > -rightStickDeadzoneHandY && rightStickY < rightStickDeadzoneHandY) rightStickY = 0.0f;
 
   if (leftTrigger)
   {
@@ -174,6 +184,7 @@ void Player::update(ECS& ecs)
 
 	if (this->dashCooldown > 0) this->dashCooldown--;
 
+  // Glove follow player
   Acceleration b_acc = (*ecs.accelerations.getComponent(this->body));
   Acceleration l_acc {
     (*ecs.accelerations.getComponent(this->left)).accX + b_acc.accX,
@@ -186,7 +197,6 @@ void Player::update(ECS& ecs)
 
   ecs.accelerations.setComponent(this->left, l_acc);
   ecs.accelerations.setComponent(this->right, r_acc);
-
 }
 
 
