@@ -120,7 +120,7 @@ void ECS::resolveCollisions(vector<pair<Entity, Entity>> const& collisions)
     Vector2 velA_new = Vector2Subtract(velA_old, velocityChangeA);
     Vector2 velB_new = Vector2Add(velB_old, velocityChangeB);
 	
-		playRandomSmack();
+		if (massA->v == 250.0f || massB->v == 250.0f) playRandomSmack();
 
     velA->vx = velA_new.x;
     velA->vy = velA_new.y;
