@@ -1,6 +1,6 @@
 #include "../inc/ecs.hpp"
 #include <cstdio>
-
+#include <queue>
 
 Entity ECS::createEntity()
 {
@@ -64,13 +64,31 @@ void ECS::updateMovement()
 	
 void ECS::renderEntities()
 {
+  std::vector<Entity> deferred{};
   for (Entity id = 0; id < nextEntity; ++id) 
   {
     Position* pos = positions.getComponent(id);
     Sprite* sprite = sprites.getComponent(id);
     
     if (!pos || !sprite) continue;
+    if (!sprite->z_index)
+    {
+      deferred.push_back(id);
+      continue;
+    }
 
+    DrawTexture(
+      sprite->tex, 
+      static_cast<int>(pos->x), 
+      static_cast<int>(pos->y), 
+      WHITE
+    );
+  }
+  for (auto &id : deferred) {
+    Position* pos = positions.getComponent(id);
+    Sprite* sprite = sprites.getComponent(id);
+    
+    if (!pos || !sprite) continue;
     DrawTexture(
       sprite->tex, 
       static_cast<int>(pos->x), 
@@ -154,8 +172,8 @@ void ECS::spawnBlood(Entity id)
 	Position* pos = this->positions.getComponent(id);
 
 	Entity bloodId = this->createEntity();
-	Lifetime lifetime { 30 };
-	Sprite sprite { bloodTex };
+	Lifetime lifetime { 600 };
+	Sprite sprite { bloodTex, 0 };
 	Position posCopy {pos->x, pos->y};
 	
 	this->positions.insert(bloodId, posCopy);

@@ -57,4 +57,5 @@ struct CollisionCallback {
 
 struct Sprite {
 	Texture2D tex;
+	int z_index;
 };
