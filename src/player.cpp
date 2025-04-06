@@ -316,8 +316,8 @@ void Player::draw_score(int player, int height) {
     score_text += "TWO";  
   }
 
-  score_text += ": ";
-  score_text += std::to_string(this->score);
+  score_text += ": $ ";
+  score_text += std::to_string(10*this->score);
 
   DrawText(score_text.c_str(), 20, height, 32, BLACK);
 }
