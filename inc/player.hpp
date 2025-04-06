@@ -32,6 +32,8 @@ struct Player
 
 	int gamepad_id;
   bool using_left;
+  bool left_dissabled;
+  bool right_dissabled;
 
   void input(ECS& ecs);
   void update(ECS& ecs);

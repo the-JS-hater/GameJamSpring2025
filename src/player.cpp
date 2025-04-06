@@ -1,7 +1,9 @@
 #include "../inc/player.hpp"
+#include <cstdio>
 
 
-#define DASH_COOLDOWN 120
+#define DASH_COOLDOWN 60
+#define GLOVE_BOUNCE_BACK 5
 
 
 void Player::gamepad_input(Acceleration& b, Acceleration& l, Acceleration& r) {
@@ -30,21 +32,40 @@ void Player::gamepad_input(Acceleration& b, Acceleration& l, Acceleration& r) {
   if (buttonFour and this->dashCooldown == 0)
   {
 		this->dashCooldown = DASH_COOLDOWN;
-    b.accX *= 10;
-    b.accY *= 10;
+    b.accX *= 30;
+    b.accY *= 30;
 		playRandomWoosh();
   }
 
+
   if (leftTrigger)
   {
-    l.accX = rightStickX * this->hand_acc;
-    l.accY = rightStickY * this->hand_acc;
+    if (this->left_dissabled) 
+    {
+      if (rightStickX == 0.0f && rightStickY == 0.0f) {
+        this->left_dissabled = false;
+      }
+    }
+    else 
+    {
+      l.accX = rightStickX * this->hand_acc;
+      l.accY = rightStickY * this->hand_acc;
+    }
   }
   
   if (rightTrigger)
   {
-    r.accX = rightStickX * this->hand_acc;
-    r.accY = rightStickY * this->hand_acc;
+    if (this->right_dissabled) 
+    {
+      if (rightStickX == 0.0f && rightStickY == 0.0f) {
+        this->right_dissabled = false;
+      }
+    }
+    else 
+    {
+      r.accY = rightStickY * this->hand_acc;
+      r.accX = rightStickX * this->hand_acc;
+    }
   }
 }
 
@@ -59,8 +80,7 @@ void Player::input(ECS &ecs)
     gamepad_input(b_a, h_l_a, h_r_a);
   }
   else
-  {
-    if (IsKeyDown(KEY_SPACE)) this->using_left = !this->using_left;
+  { if (IsKeyDown(KEY_SPACE)) this->using_left = !this->using_left;
 
     if (IsKeyDown(KEY_UP)) b_a.accY = -this->body_acc;
     if (IsKeyDown(KEY_LEFT)) b_a.accX = -this->body_acc;
@@ -89,76 +109,92 @@ void Player::input(ECS &ecs)
 
 void Player::update(ECS& ecs)
 {
+  Dimension b_dim = (*ecs.dimensions.getComponent(this->body));
   Position b_pos = (*ecs.positions.getComponent(this->body));
+  Position b_center {
+    b_pos.x + b_dim.w / 2.0f,
+    b_pos.y + b_dim.h / 2.0f
+  };
+
   Position h_l_pos = (*ecs.positions.getComponent(this->left));
   Position h_r_pos = (*ecs.positions.getComponent(this->right));
   
   Velocity h_r_v(*ecs.velocities.getComponent(this->right));
-  float h_l_dis = (float) sqrt(pow(h_l_pos.x - b_pos.x, 2) + pow(h_l_pos.y - b_pos.y, 2)); 
-  float h_r_dis = (float) sqrt(pow(h_r_pos.x - b_pos.x, 2) + pow(h_r_pos.y - b_pos.y, 2)); 
+  Velocity h_l_v(*ecs.velocities.getComponent(this->left));
+
+  float h_l_dis = (float) sqrt(pow(h_l_pos.x - b_pos.x, 2) + pow(h_l_pos.y - b_center.y, 2)); 
+  float h_r_dis = (float) sqrt(pow(h_r_pos.x - b_pos.x, 2) + pow(h_r_pos.y - b_center.y, 2)); 
 
   float tmp;
   if (h_l_dis > this->max_d) // Left hand too far away
   {
-    Velocity h_l_v(*ecs.velocities.getComponent(this->left));
-    tmp = h_l_v.max_v;
-    
-    h_l_v.vx = - h_l_v.vx;
-    h_l_v.vy = - h_l_v.vy;
+    Acceleration acc = (*ecs.accelerations.getComponent(this->left));
 
-    h_l_v.max_v = h_l_v.swap_max_v;
-    h_l_v.swap_max_v = tmp;
+    if (acc.accX != 0.0f || acc.accY != 0.0f)
+    {
+      acc.accX = -acc.accX * GLOVE_BOUNCE_BACK;
+      acc.accY = -acc.accY * GLOVE_BOUNCE_BACK;
+
+      this->left_dissabled = true;
+    }
 
     Position new_pos {
-      (b_pos.x + this->max_d * (h_l_pos.x - b_pos.x ) / h_l_dis),
-      (b_pos.y + this->max_d * (h_l_pos.y - b_pos.y ) / h_l_dis)
+      (b_center.x + this->max_d * (h_l_pos.x - b_center.x ) / h_l_dis),
+      (b_center.y + this->max_d * (h_l_pos.y - b_center.y ) / h_l_dis)
     };
 
     ecs.positions.setComponent(this->left, new_pos);
-    ecs.velocities.setComponent(this->left, h_l_v);
+    ecs.accelerations.setComponent(this->left, acc);
   }
-  if (h_l_dis <= this->min_d) // Left hand back again
-  {
-    Velocity h_l_v(*ecs.velocities.getComponent(this->left));
-    tmp = h_l_v.max_v;
-    
-    h_l_v.vx = 0.f;
-    h_l_v.vy = 0.f;
-
-    h_l_v.max_v = h_l_v.swap_max_v;
-    h_l_v.swap_max_v = tmp;
-    
-    ecs.velocities.setComponent(this->left, h_l_v);
-  }
-
+  //
+  // if (h_l_dis <= this->min_d) // Left hand back again
+  // {
+  //   tmp = h_l_v.max_v;
+  //
+  //   h_l_v.vx = 0.f;
+  //   h_l_v.vy = 0.f;
+  //
+  //   h_l_v.max_v = h_l_v.swap_max_v;
+  //   h_l_v.swap_max_v = tmp;
+  //
+  //   ecs.velocities.setComponent(this->left, h_l_v);
+  // }
+  //
   if (h_r_dis > this->max_d) // Right hand too far away
   {
-    Velocity h_r_v(*ecs.velocities.getComponent(this->right));
-    tmp = h_r_v.max_v;
-    h_r_v.max_v = h_r_v.swap_max_v;
-    h_r_v.swap_max_v = tmp;
+    Acceleration acc = (*ecs.accelerations.getComponent(this->right));
+
+    if (!(acc.accX == 0.0f && acc.accY == 0.0f))
+    {
+      acc.accX = -acc.accX * GLOVE_BOUNCE_BACK;
+      acc.accY = -acc.accY * GLOVE_BOUNCE_BACK;
+
+      this->right_dissabled = true;
+    }
+
 
     Position new_pos {
-      (b_pos.x + this->max_d * (h_r_pos.x - b_pos.x ) / h_r_dis),
-      (b_pos.y + this->max_d * (h_r_pos.y - b_pos.y ) / h_r_dis)
+      (b_center.x + this->max_d * (h_r_pos.x - b_center.x ) / h_r_dis),
+      (b_center.y + this->max_d * (h_r_pos.y - b_center.y ) / h_r_dis)
     };
 
     ecs.positions.setComponent(this->right, new_pos);
-    ecs.velocities.setComponent(this->right, h_r_v);
+    ecs.accelerations.setComponent(this->right, acc);
   }
-  if (h_r_dis <= this->min_d) // Right hand back again
-  {
-    Velocity h_r_v(*ecs.velocities.getComponent(this->left));
-    h_r_v.vx = 0.f;
-    h_r_v.vy = 0.f;
-
-    tmp = h_r_v.max_v;
-    h_r_v.max_v = h_r_v.swap_max_v;
-    h_r_v.swap_max_v = tmp;
-
-    ecs.velocities.setComponent(this->right, h_r_v);
-  }
-
+  //
+  // if (h_r_dis <= this->min_d) // Right hand back again
+  // {
+  //   Velocity h_r_v(*ecs.velocities.getComponent(this->left));
+  //   h_r_v.vx = 0.f;
+  //   h_r_v.vy = 0.f;
+  //
+  //   tmp = h_r_v.max_v;
+  //   h_r_v.max_v = h_r_v.swap_max_v;
+  //   h_r_v.swap_max_v = tmp;
+  //
+  //   ecs.velocities.setComponent(this->right, h_r_v);
+  // }
+  //
 	if (this->dashCooldown > 0) this->dashCooldown--;
 }
 
@@ -197,7 +233,7 @@ Player init_player(ECS& ecs, Position& p_pos, Texture2D& gloveTex, Texture2D& ra
   	Velocity vel = { 0.0f, 0.0f, 7.0f, 0.0f };
   	Acceleration acc = { 0.0f, 0.0f, 0.0f };
   	Dimension dim = { 32.0f, 32.0f };
-		Mass mass = { 10000.0f };
+		Mass mass = { 600.0f };
 
   	Collider collider;
   	collider.update(pos, dim);
@@ -219,7 +255,7 @@ Player init_player(ECS& ecs, Position& p_pos, Texture2D& gloveTex, Texture2D& ra
   	Velocity vel = { 0.0f, 0.0f, 7.0f, 0.0f };
   	Acceleration acc = { 0.0f, 0.0f, 0.0f };
   	Dimension dim = { 32.0f, 32.0f };
-		Mass mass = { 10000.0f };
+		Mass mass = { 600.0f };
 
   	Collider collider;
   	collider.update(pos, dim);
@@ -243,12 +279,14 @@ Player init_player(ECS& ecs, Position& p_pos, Texture2D& gloveTex, Texture2D& ra
 		0,							  // dash cooldown
     0.5,        		  // hand retard
     0.95,       		  // body retard
-    2,          		  // hand min dist
-    60,          		  // hand max dist
+    30,          		  // hand min dist
+    100,          		  // hand max dist
     0,          		  // score
     p_pos,            // spawn position
     next_gamepad_id++,
     true,             // starting hand (true: left, false: right)
+    false,            // Disable left hand
+    false,            // Disable right hand
   };
 }
 
