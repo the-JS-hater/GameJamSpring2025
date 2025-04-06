@@ -1,6 +1,49 @@
 #pragma once
 
 #include <stdio.h>
+#include <raylib.h>
+#include <cstdlib>
+
+
+void drawCrowds(Texture2D crowd, Texture2D crowd2)
+{
+	Rectangle source {
+		0.0f,
+		(crowd.height / 3.0f) * (rand()%3),
+		crowd.width,
+		crowd.height / 3.0f 
+	};
+
+	DrawTexturePro(
+		crowd,
+		source,
+		{
+			10.0f, 
+			GetScreenHeight() / 3, 
+			2.0f * crowd.width, 
+			2.0f * crowd.height / 3.0f
+		}, 
+		{0.0f, 0.0f},
+		0.0f,
+		WHITE
+	);
+
+	source.y = (crowd.height / 3.0f) * (rand()%3);
+	
+	DrawTexturePro(
+		crowd2,
+		source,
+		{
+			GetScreenWidth() * 0.88, 
+			GetScreenHeight() / 3, 
+			2.0f * crowd.width, 
+			2.0f * crowd.height / 3.0f
+		}, 
+		{0.0f, 0.0f},
+		0.0f,
+		WHITE
+	);
+}
 
 void genTestEntities(ECS& ecs, size_t count) 
 {

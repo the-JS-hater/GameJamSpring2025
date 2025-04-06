@@ -20,7 +20,6 @@ int main()
 	InitAudioDevice();                                     
 	srand(time(NULL));
 	initSounds();
-
 	
 	ECS ecs; 
 
@@ -77,6 +76,8 @@ int main()
 		ecs.resolveCollisions(vec);
 		hex.checkHexBounds(ecs, player_1, player_2, is_win);
  		
+		playRandomCrowdAudio();
+		
 		/* RENDERING */
   	
   	BeginDrawing();
@@ -89,44 +90,7 @@ int main()
     player_2.draw_score(2, 50);
 		ecs.renderEntities();
 		
-		Rectangle source {
-			0.0f,
-			(crowd.height / 3.0f) * (rand()%3),
-			crowd.width,
-			crowd.height / 3.0f 
-		};
-
-		DrawTexturePro(
-			crowd,
-			source,
-			{
-				10.0f, 
-				GetScreenHeight() / 3, 
-				2.0f * crowd.width, 
-				2.0f * crowd.height / 3.0f
-			}, 
-			{0.0f, 0.0f},
-			0.0f,
-			WHITE
-		);
-
-		source.y = (crowd.height / 3.0f) * (rand()%3);
-		
-		DrawTexturePro(
-			crowd2,
-			source,
-			{
-				GetScreenWidth() * 0.88, 
-				GetScreenHeight() / 3, 
-				2.0f * crowd.width, 
-				2.0f * crowd.height / 3.0f
-			}, 
-			{0.0f, 0.0f},
-			0.0f,
-			WHITE
-		);
-
-		//drawCollisionDetection(vec, ecs);
+		drawCrowds(crowd, crowd2);
 
 		EndDrawing();
 	}

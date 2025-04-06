@@ -7,3 +7,4 @@
 void initSounds();
 void playRandomSmack();
 void playRandomWoosh();
+void playRandomCrowdAudio();

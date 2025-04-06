@@ -10,6 +10,13 @@ Sound woosh01;
 Sound woosh02;
 Sound rarewoosh03;
 Sound rarewoosh04;
+Sound crowdSound01; 
+Sound crowdSound02;
+Sound crowdSound03;
+Sound crowdSound04;
+Sound crowdSound05;
+Sound crowdSound06;
+Sound crowdSound07;
 
 
 void initSounds()
@@ -24,6 +31,31 @@ void initSounds()
 	woosh02			= LoadSound("resources/audio/Woosh-02.wav");
 	rarewoosh03	= LoadSound("resources/audio/Woosh-03.wav");
 	rarewoosh04	= LoadSound("resources/audio/Woosh-04.wav");
+
+	crowdSound01 = LoadSound("resources/audio/crowd-01.wav");
+	crowdSound02 = LoadSound("resources/audio/crowd-02.wav");
+	crowdSound03 = LoadSound("resources/audio/crowd-03.wav");
+	crowdSound04 = LoadSound("resources/audio/crowd-04.wav");
+	crowdSound05 = LoadSound("resources/audio/crowd-05.wav");
+	crowdSound06 = LoadSound("resources/audio/crowd-06.wav");
+	crowdSound07 = LoadSound("resources/audio/crowd-07.wav");
+}
+
+void playRandomCrowdAudio()
+{
+	// Advanced crowd A.I.
+	if (rand()%100 < 98) return;
+
+	switch(rand()%7)
+	{
+		case 0: PlaySound(crowdSound01); break;  
+		case 1: PlaySound(crowdSound02); break;
+		case 2: PlaySound(crowdSound03); break;
+		case 3: PlaySound(crowdSound04); break;
+		case 4: PlaySound(crowdSound05); break;
+		case 5: PlaySound(crowdSound06); break;
+		case 6: PlaySound(crowdSound07); break;
+	}
 }
 
 void playRandomSmack()
