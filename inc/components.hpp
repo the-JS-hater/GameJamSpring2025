@@ -31,6 +31,11 @@ struct Acceleration
 	float accX, accY, retarding_factor;
 };
 
+struct Lifetime
+{
+	int timer;
+};
+
 struct Collider {
   Rectangle rect; 
 

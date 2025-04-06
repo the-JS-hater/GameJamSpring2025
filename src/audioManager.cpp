@@ -18,6 +18,10 @@ Sound crowdSound05;
 Sound crowdSound06;
 Sound crowdSound07;
 
+// dont ask
+Texture2D blood1;
+Texture2D	blood2;
+Texture2D	blood3;
 
 void initSounds()
 {
@@ -39,6 +43,22 @@ void initSounds()
 	crowdSound05 = LoadSound("resources/audio/crowd-05.wav");
 	crowdSound06 = LoadSound("resources/audio/crowd-06.wav");
 	crowdSound07 = LoadSound("resources/audio/crowd-07.wav");
+
+	// fuck it
+	blood1 = LoadTexture("resources/sprites/Blood1.png"); 
+  blood2 = LoadTexture("resources/sprites/Blood2.png");
+  blood3 = LoadTexture("resources/sprites/Blood3.png");
+}
+
+Texture2D getRandomBlood()
+{
+	switch(rand()%3)
+	{
+		case 0: return blood1;
+		case 1: return blood2;
+		case 2: return blood3;
+		default: return blood2;
+	}
 }
 
 void playRandomCrowdAudio()

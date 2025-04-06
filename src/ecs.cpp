@@ -8,13 +8,15 @@ Entity ECS::createEntity()
 
 void ECS::destroyEntity(Entity id)
 {
-  positions.remove(id);
+  positions.remove(id);       
   velocities.remove(id);
-	dimensions.remove(id);
-	colliders.remove(id);
-  accelerations.remove(id);
-  masses.remove(id);
-	collisionCallbacks.remove(id);
+  dimensions.remove(id);  
+  colliders.remove(id);	
+  collisionCallbacks.remove(id);   
+	sprites.remove(id);
+	masses.remove(id);
+	accelerations.remove(id);		
+	lifetimes.remove(id);	
 }
 
 void ECS::updateVelocities()
@@ -120,11 +122,30 @@ void ECS::resolveCollisions(vector<pair<Entity, Entity>> const& collisions)
     Vector2 velA_new = Vector2Subtract(velA_old, velocityChangeA);
     Vector2 velB_new = Vector2Add(velB_old, velocityChangeB);
 	
-		if (massA->v == 250.0f xor massB->v == 250.0f) playRandomSmack();
+		if (massA->v == 250.0f xor massB->v == 250.0f) 
+		{
+			playRandomSmack();
+			this->spawnBlood(entityA);
+		}
 
     velA->vx = velA_new.x;
     velA->vy = velA_new.y;
     velB->vx = velB_new.x;
     velB->vy = velB_new.y;
   }
+}
+
+void ECS::spawnBlood(Entity id)
+{
+	Texture2D bloodTex = getRandomBlood(); 
+	Position* pos = this->positions.getComponent(id);
+
+	Entity bloodId = this->createEntity();
+	Lifetime lifetime { 600 };
+	Sprite sprite { bloodTex };
+	Position posCopy {pos->x, pos->y};
+	
+	this->positions.insert(bloodId, posCopy);
+	this->lifetimes.insert(bloodId, lifetime);
+	this->sprites.insert(bloodId, sprite);
 }

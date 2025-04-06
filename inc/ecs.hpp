@@ -22,16 +22,21 @@ struct ECS
 	SparseSet<Sprite> sprites;
 	SparseSet<Mass> masses;
 	SparseSet<Acceleration> accelerations;
+	SparseSet<Lifetime> lifetimes;
 
   Entity createEntity();
 
   void destroyEntity(Entity);
 
   void updateMovement();
+
+	void updateLifetime();
 	
 	void updateVelocities();
 
 	void renderEntities();
 
 	void resolveCollisions(vector<pair<Entity, Entity>> const&); 
+
+	void spawnBlood(Entity id);
 };

@@ -8,3 +8,4 @@ void initSounds();
 void playRandomSmack();
 void playRandomWoosh();
 void playRandomCrowdAudio();
+Texture2D getRandomBlood();

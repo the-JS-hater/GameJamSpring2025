@@ -34,3 +34,4 @@ template struct SparseSet<CollisionCallback>;
 template struct SparseSet<Sprite>;
 template struct SparseSet<Mass>;
 template struct SparseSet<Acceleration>;
+template struct SparseSet<Lifetime>;
