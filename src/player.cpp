@@ -1,9 +1,11 @@
 #include "../inc/player.hpp"
+#include <cmath>
 #include <cstdio>
+#include <raylib.h>
 
 
 #define DASH_COOLDOWN 60
-#define GLOVE_BOUNCE_BACK 5
+#define GLOVE_BOUNCE_BACK 3
 
 
 void Player::gamepad_input(Acceleration& b, Acceleration& l, Acceleration& r) {
@@ -109,6 +111,7 @@ void Player::input(ECS &ecs)
 
 void Player::update(ECS& ecs)
 {
+  // Body
   Dimension b_dim = (*ecs.dimensions.getComponent(this->body));
   Position b_pos = (*ecs.positions.getComponent(this->body));
   Position b_center {
@@ -116,85 +119,80 @@ void Player::update(ECS& ecs)
     b_pos.y + b_dim.h / 2.0f
   };
 
+  // Left hand
   Position h_l_pos = (*ecs.positions.getComponent(this->left));
-  Position h_r_pos = (*ecs.positions.getComponent(this->right));
-  
-  Velocity h_r_v(*ecs.velocities.getComponent(this->right));
+  Dimension h_l_dim = (*ecs.dimensions.getComponent(this->left));
   Velocity h_l_v(*ecs.velocities.getComponent(this->left));
+  Position h_l_center {
+    h_l_pos.x + h_l_dim.w / 2.0f,
+    h_l_pos.y + h_l_dim.h / 2.0f
+  };
+  float h_l_dis = (float) sqrt(pow(h_l_center.x - b_pos.x, 2) + pow(h_l_center.y - b_center.y, 2)); 
 
-  float h_l_dis = (float) sqrt(pow(h_l_pos.x - b_pos.x, 2) + pow(h_l_pos.y - b_center.y, 2)); 
-  float h_r_dis = (float) sqrt(pow(h_r_pos.x - b_pos.x, 2) + pow(h_r_pos.y - b_center.y, 2)); 
+  // Right hand
+  Position h_r_pos = (*ecs.positions.getComponent(this->right));
+  Dimension h_r_dim = (*ecs.dimensions.getComponent(this->right));
+  Velocity h_r_v(*ecs.velocities.getComponent(this->right));
+  Position h_r_center {
+    h_r_pos.x + h_r_dim.w / 2.0f,
+    h_r_pos.y + h_r_dim.h / 2.0f
+  };
+  float h_r_dis = (float) sqrt(pow(h_r_center.x - b_pos.x, 2) + pow(h_r_center.y - b_center.y, 2)); 
 
-  float tmp;
   if (h_l_dis > this->max_d) // Left hand too far away
   {
     Acceleration acc = (*ecs.accelerations.getComponent(this->left));
 
+    Vector2 v {
+      (h_l_center.x - b_center.x ) / h_l_dis,
+      (h_l_center.y - b_center.y ) / h_l_dis
+    };
+
     if (acc.accX != 0.0f || acc.accY != 0.0f)
     {
-      acc.accX = -acc.accX * GLOVE_BOUNCE_BACK;
-      acc.accY = -acc.accY * GLOVE_BOUNCE_BACK;
+      float acc_t = sqrt(pow(acc.accX, 2) + pow(acc.accY, 2));
+      acc.accX = acc_t * GLOVE_BOUNCE_BACK * (-v.x);
+      acc.accY = acc_t * GLOVE_BOUNCE_BACK * (-v.y);
 
       this->left_dissabled = true;
     }
 
     Position new_pos {
-      (b_center.x + this->max_d * (h_l_pos.x - b_center.x ) / h_l_dis),
-      (b_center.y + this->max_d * (h_l_pos.y - b_center.y ) / h_l_dis)
+      (b_center.x + this->max_d * v.x - h_l_dim.w / 2),
+      (b_center.y + this->max_d * v.y - h_l_dim.h / 2)
     };
 
     ecs.positions.setComponent(this->left, new_pos);
     ecs.accelerations.setComponent(this->left, acc);
   }
-  //
-  // if (h_l_dis <= this->min_d) // Left hand back again
-  // {
-  //   tmp = h_l_v.max_v;
-  //
-  //   h_l_v.vx = 0.f;
-  //   h_l_v.vy = 0.f;
-  //
-  //   h_l_v.max_v = h_l_v.swap_max_v;
-  //   h_l_v.swap_max_v = tmp;
-  //
-  //   ecs.velocities.setComponent(this->left, h_l_v);
-  // }
-  //
+  
   if (h_r_dis > this->max_d) // Right hand too far away
   {
     Acceleration acc = (*ecs.accelerations.getComponent(this->right));
 
+    Vector2 v {
+      (h_r_center.x - b_center.x ) / h_r_dis,
+      (h_r_center.y - b_center.y ) / h_r_dis
+    };
+
     if (!(acc.accX == 0.0f && acc.accY == 0.0f))
     {
-      acc.accX = -acc.accX * GLOVE_BOUNCE_BACK;
-      acc.accY = -acc.accY * GLOVE_BOUNCE_BACK;
+      float acc_t = sqrt(pow(acc.accX, 2) + pow(acc.accY, 2));
+      acc.accX = acc_t * GLOVE_BOUNCE_BACK * (-v.x);
+      acc.accY = acc_t * GLOVE_BOUNCE_BACK * (-v.y);
 
       this->right_dissabled = true;
     }
 
-
     Position new_pos {
-      (b_center.x + this->max_d * (h_r_pos.x - b_center.x ) / h_r_dis),
-      (b_center.y + this->max_d * (h_r_pos.y - b_center.y ) / h_r_dis)
+      (b_center.x + this->max_d * v.x - h_r_dim.w / 2),
+      (b_center.y + this->max_d * v.y - h_r_dim.h / 2)
     };
 
     ecs.positions.setComponent(this->right, new_pos);
     ecs.accelerations.setComponent(this->right, acc);
   }
-  //
-  // if (h_r_dis <= this->min_d) // Right hand back again
-  // {
-  //   Velocity h_r_v(*ecs.velocities.getComponent(this->left));
-  //   h_r_v.vx = 0.f;
-  //   h_r_v.vy = 0.f;
-  //
-  //   tmp = h_r_v.max_v;
-  //   h_r_v.max_v = h_r_v.swap_max_v;
-  //   h_r_v.swap_max_v = tmp;
-  //
-  //   ecs.velocities.setComponent(this->right, h_r_v);
-  // }
-  //
+
 	if (this->dashCooldown > 0) this->dashCooldown--;
 }
 
