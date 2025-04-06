@@ -1,6 +1,7 @@
 #include "../inc/ecs.hpp"
 #include <cstdio>
 
+
 Entity ECS::createEntity()
 {
   return nextEntity++;
@@ -133,6 +134,18 @@ void ECS::resolveCollisions(vector<pair<Entity, Entity>> const& collisions)
     velB->vx = velB_new.x;
     velB->vy = velB_new.y;
   }
+}
+
+void ECS::updateLifetime()
+{
+  for (Entity id = 0; id < nextEntity; ++id) 
+	{
+		Lifetime* lifetime = this->lifetimes.getComponent(id);
+		if (!lifetime) continue;
+		if (lifetime->timer <= 0) { this->destroyEntity(id); continue; }
+		
+		lifetime->timer--;
+	}
 }
 
 void ECS::spawnBlood(Entity id)

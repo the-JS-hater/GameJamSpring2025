@@ -66,6 +66,8 @@ int main()
     }
 
 		/* UPDATE */
+		ecs.updateLifetime();
+
     player_1.input(ecs);
 		player_1.update(ecs);
     player_2.input(ecs);
